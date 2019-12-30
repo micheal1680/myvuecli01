@@ -16,7 +16,7 @@
       </el-menu-item>
       <el-menu-item index="1">发现音乐</el-menu-item>
       <el-menu-item index="2">我的音乐</el-menu-item>
-      <el-menu-item index="">
+      <el-menu-item index>
         <el-autocomplete
           v-model="state"
           :fetch-suggestions="querySearchAsync"
@@ -55,18 +55,15 @@ export default {
         case "2":
           this.$route.path == "/my" ? "" : this.$router.push("/my");
           break;
+        
         case "3":
           this.$route.path == "/info" ? "" : this.$router.push("/info");
           break;
         case "3-1":
-          this.$route.path == "/mymain"
-            ? ""
-            : this.$router.push("/mymain");
+          this.$route.path == "/mymain" ? "" : this.$router.push("/mymain");
           break;
         case "3-2":
-          this.$route.path == "/setting"
-            ? ""
-            : this.$router.push("/setting");
+          this.$route.path == "/setting" ? "" : this.$router.push("/setting");
           break;
         case "3-3":
           this.$route.path == "/out" ? "" : this.$router.push("/out");
