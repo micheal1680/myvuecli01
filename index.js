@@ -30,7 +30,7 @@ app.use(bodyPaser.urlencoded({
 app.get("/getData",function(req,res){//4、开辟路由
 	console.log("接收到前端发起的/getData 请求");
 	res.json({
-		data:"请求成功"
+		data:"测试接口，请求成功"
 	})
 })
 
