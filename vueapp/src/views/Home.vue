@@ -1,4 +1,5 @@
 <template>
+
   <div class="home">
     <div class="lunbo">
       <div class="lunbotu">
@@ -44,6 +45,7 @@ export default {
     }
   }
 };
+
 </script>
 
 <style scoped>
