@@ -5,9 +5,25 @@
       class="el-menu-demo"
       mode="horizontal"
       @select="handleSelect"
+      background-color="#242424"
+      text-color="#fff"
+      active-text-color="#ffd04b"
     >
+      <el-menu-item index>
+        <a href="https://localhost:8080">
+          <img src="../public/img/logo1.jpg" alt />
+        </a>
+      </el-menu-item>
       <el-menu-item index="1">发现音乐</el-menu-item>
       <el-menu-item index="2">我的音乐</el-menu-item>
+      <el-menu-item index="">
+        <el-autocomplete
+          v-model="state"
+          :fetch-suggestions="querySearchAsync"
+          placeholder="音乐/视频/电台/用户"
+          @select="handleSelect"
+        ></el-autocomplete>
+      </el-menu-item>
       <el-submenu index="3">
         <template slot="title">个人中心</template>
         <el-menu-item index="3-1">我的主页</el-menu-item>
@@ -23,7 +39,10 @@
 export default {
   data() {
     return {
-      activeIndex: "1"
+      activeIndex: "1",
+      restaurants: [],
+      state: "",
+      timeout: null
     };
   },
   methods: {
@@ -39,6 +58,19 @@ export default {
         case "3":
           this.$route.path == "/info" ? "" : this.$router.push("/info");
           break;
+        case "3-1":
+          this.$route.path == "/mymain"
+            ? ""
+            : this.$router.push("/mymain");
+          break;
+        case "3-2":
+          this.$route.path == "/setting"
+            ? ""
+            : this.$router.push("/setting");
+          break;
+        case "3-3":
+          this.$route.path == "/out" ? "" : this.$router.push("/out");
+          break;
       }
     },
     setActiveIndex() {
@@ -52,7 +84,40 @@ export default {
         case "/info":
           this.activeIndex = "3";
           break;
+        case "/mymain":
+          this.activeIndex = "3-1";
+          break;
+        case "/setting":
+          this.activeIndex = "3-2";
+          break;
+        case "/out":
+          this.activeIndex = "3-3";
+          break;
       }
+    },
+    loadAll() {
+      return;
+    },
+    querySearchAsync(queryString, cb) {
+      var restaurants = this.restaurants;
+      var results = queryString
+        ? restaurants.filter(this.createStateFilter(queryString))
+        : restaurants;
+
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        cb(results);
+      }, 3000 * Math.random());
+    },
+    createStateFilter(queryString) {
+      return state => {
+        return (
+          state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+        );
+      };
+    },
+    handleSelect(item) {
+      console.log(item);
     }
   },
   watch: {
@@ -62,29 +127,30 @@ export default {
   },
   created() {
     this.setActiveIndex();
+  },
+  mounted() {
+    this.restaurants = this.loadAll();
   }
 };
 </script>
 
 <style lang="scss">
+* {
+  padding: 0;
+  margin: 0;
+}
+a {
+  width: 180px;
+  height: 60px;
+}
+img {
+  margin: auto 0;
+}
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
 }
 </style>

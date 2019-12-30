@@ -1,11 +1,13 @@
 <template>
-<span>jj</span>
+  
 </template>
 
 <script>
-
-
 export default {
 
 }
 </script>
+
+<style>
+
+</style>
