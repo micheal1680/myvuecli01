@@ -60,7 +60,6 @@ export default {
         case "2":
           this.$route.path == "/my" ? "" : this.$router.push("/my");
           break;
-        
         case "3":
           this.$route.path == "/info" ? "" : this.$router.push("/info");
           break;
@@ -73,6 +72,7 @@ export default {
         case "3-3":
           this.$route.path == "/out" ? "" : this.$router.push("/out");
           break;
+
       }
     },
     setActiveIndex() {

@@ -5,8 +5,8 @@ import Info from '../views/info.vue'
 import mymain from "../components/mymain.vue"
 import setting from "../components/setting.vue"
 import out from "../components/out.vue"
-import register from "../components/wlcomponents/register.vue";
-import login from "../components/wlcomponents/login.vue"
+import register from "../components/register.vue";
+import login from "../components/login.vue"
 
 Vue.use(VueRouter)
 
@@ -22,39 +22,35 @@ const routes = [
     component: () => import('../views/mymusic.vue')
   },
   {
-    path:'/info',
-    name:'info',
-    component: Info,
-    // children:[
-    //   {
-    //     path: 'mymain',
-    //     component: mymain,
-    //   },
-    //   {
-    //     path: 'setting',
-    //     component: setting
-    //   },
-    //   {
-    //     path: 'out',
-    //     component: out
-    //   }
-    // ]
- },
- {
-  path:'/register',
-  
-  component: register 
-},
-{
-  path:'/login',
-  
-  component: login 
-}
+    path: '/info',
+    name: 'info',
+    component: Info
+  },
+  {
+    path: '/mymain',
+    component: mymain
+  },
+  {
+    path: '/setting',
+    component: setting
+  },
+  {
+    path: '/out',
+    component: out
+  },
+  {
+    path: '/register',
+    component: register
+  },
+  {
+    path: '/login',
+    component: login
+  }
 ]
 
 const router = new VueRouter({
   routes,
-  mode:'hash'
+  mode: 'hash'
 })
 
 export default router
