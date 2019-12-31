@@ -33,18 +33,18 @@ app.get("/getData",function(req,res){//4、开辟路由
 		data:"测试接口，请求成功"
 	})
 })
-
-app.get("/getEmployees",function(req,res){
-	console.log("接收到前端发起的/getEmployees 请求");
-	console.log(req.query.employName);
-	var sql="select * from employee where 1 ";
+// 商品展示
+app.get("/getproducts",function(req,res){
+	console.log("接收到前端发起的商品 请求");
+	console.log(req.query);
+	var sql="select * from products where 1 ";
 	
-	if(req.query.employName){
-		sql+=`and name like '%${req.query.employName}% '`
+	if(req.query.keyword){
+		sql+=`and name like '%${req.query.keyword}% '`
 	}
 	
-	if(req.query.deptid){
-		sql+=`and deptid=${req.query.deptid}`
+	if(req.query.type){
+		sql+=`and deptid=${req.query.type}`
 	}
 	
 	mydb.query(sql,function(err,result){

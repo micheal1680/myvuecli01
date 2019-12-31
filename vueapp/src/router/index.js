@@ -7,6 +7,7 @@ import setting from "../components/setting.vue"
 import out from "../components/out.vue"
 import register from "../components/register.vue";
 import login from "../components/login.vue"
+import product from '../views/product.vue'
 
 Vue.use(VueRouter)
 
@@ -45,6 +46,10 @@ const routes = [
   {
     path: '/login',
     component: login
+  },
+  {
+    path: '/product',
+    component: product
   }
 ]
 

@@ -30,6 +30,7 @@
         <el-menu-item index="3-2">个人设置</el-menu-item>
         <el-menu-item index="3-3">退出</el-menu-item>
       </el-submenu>
+      <el-menu-item index="5">商城</el-menu-item>
     </el-menu>
     <!-- <test-footer></test-footer> -->
     <router-view></router-view>
@@ -72,7 +73,8 @@ export default {
         case "3-3":
           this.$route.path == "/out" ? "" : this.$router.push("/out");
           break;
-
+        case "5":
+          this.$route.path == "/product" ? "" : this.$router.push("/product");
       }
     },
     setActiveIndex() {
@@ -94,6 +96,9 @@ export default {
           break;
         case "/out":
           this.activeIndex = "3-3";
+          break;
+        case "/product":
+          this.activeIndex = "5";
           break;
       }
     },
