@@ -10,7 +10,6 @@ import login from "../components/login.vue"
 import product from '../views/product.vue'
 // 牛---添加的音乐分类子组件
 import discover from "../views/discover.vue"
-
 import chineseMusic from "../components/musicType/chinese.vue";
 import popularMusic from "../components/musicType/popular.vue";
 import rockMusic from "../components/musicType/rock.vue";
@@ -18,7 +17,9 @@ import balladMusic from "../components/musicType/ballad.vue";
 import electronicMusic from "../components/musicType/electronic.vue";
 import moreMusic from "../components/musicType/more.vue";
 import list from  "../components/list.vue";
-import favorite from "../components/favorite.vue"
+import favorite from "../components/favorite.vue";
+
+import downloadclient from "../views/downloadclient.vue";
 
 Vue.use(VueRouter)
 
@@ -56,6 +57,10 @@ const routes = [
   {
     path: '/more',
     component: moreMusic
+  },
+  {
+    path: '/downloadclient',
+    component: downloadclient
   },
   {
     path: '/my',

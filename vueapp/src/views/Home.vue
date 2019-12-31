@@ -6,14 +6,20 @@
         <el-carousel-item v-for="(item,index) in lunbotuArr" :key="index">
           <img :src="item.src" alt />
         </el-carousel-item>
+        <div class="download">
+          <img src="../assets/Home-images/download/01.png" alt />
+          <img src="../assets/Home-images/download/02.png" alt />
+          <el-row>
+            <el-button type="primary" @click="downloadClient">
+              <i class="iconfont icon-xiazai"></i>
+              下载客户端</el-button>
+          </el-row>
+          <p class="clientName">PC 安卓 iPhone WP iPad Mac 六大客户端</p>
+        </div>
       </el-carousel>
     </div>
     <!-- 下载客户端 -->
-    <!-- <div class="download">
-      <el-row>
-        <el-button type="primary">下载客户端</el-button>
-      </el-row>
-    </div>-->
+
     <!-- 热门推荐导航栏 -->
     <div>
       <el-menu
@@ -40,6 +46,8 @@
       </el-aside>
       <el-main>Main</el-main>
     </el-container>
+    <!-- 底部信息 -->
+    <div></div>
     <router-view></router-view>
   </div>
 </template>
@@ -55,6 +63,8 @@ import lunbotu6 from "../assets/Home-images/lunbotu/06.jpg";
 import lunbotu7 from "../assets/Home-images/lunbotu/07.jpg";
 import lunbotu8 from "../assets/Home-images/lunbotu/08.jpg";
 import hotRecommend from "../components/hotRecommend.vue";
+//import footer from "../components/footer.vue"  不能用footer作为组件名
+
 export default {
   name: "home",
   data: function() {
@@ -73,6 +83,9 @@ export default {
     };
   },
   methods: {
+    downloadClient(){
+      this.$router.push({path: "/downloadclient"})
+    },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
       console.log(this.$route.path);
@@ -131,6 +144,7 @@ export default {
   },
   components: {
     hotRecommend: hotRecommend
+    // "footer": footer
   }
 };
 </script>
@@ -164,20 +178,41 @@ export default {
 .download {
   width: 254px;
   height: 285px;
-  background-color: #475669;
-  position: absolute;
-  top: 0;
-  right: 180px;
+  background-color: #0d0d0d;
   z-index: 99;
+  position: relative;
+  margin-left: 916px;
+  .el-button {
+    width: 215px;
+    height: 56px;
+    line-height: 0;
+    font-size: 20px;
+    background-color: #3475db;
+    border: none;
+    margin-top: 185px;
+  }
+  .icon-xiazai{
+    font-size: 26px;
+    vertical-align: middle;
+  }
+  .clientName {
+    font-size: 12px;
+    color: #797877;
+    margin-top: -8px;
+  }
 }
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 18px;
-  opacity: 0.75;
-  line-height: 300px;
-  margin: 0;
+.download img:first-of-type {
+  width: 200px;
+  position: absolute;
+  top: 40px;
+  left: 20px;
 }
-
+.download img:last-of-type {
+  height: 70px;
+  position: absolute;
+  top: 100px;
+  right: 35px;
+}
 .el-carousel__item:nth-child(2n) {
   background-color: #99a9bf;
 }
