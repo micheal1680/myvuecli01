@@ -60,6 +60,7 @@ export default {
         case "2":
           this.$route.path == "/my" ? "" : this.$router.push("/my");
           break;
+        
         case "3":
           this.$route.path == "/info" ? "" : this.$router.push("/info");
           break;
