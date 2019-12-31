@@ -1,6 +1,4 @@
 <template>
-
-  <div class="home">
     <div class="lunbo">
       <div class="lunbotu">
         <el-carousel :interval="5000" arrow="always">
@@ -15,7 +13,6 @@
         </el-row>
       </div>
     </div>
-  </div>
 </template>
 
 <script>

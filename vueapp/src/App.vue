@@ -10,18 +10,18 @@
       active-text-color="#ffd04b"
     >
       <el-menu-item index>
-        <a href="https://localhost:8080">
+        <a href="#">
           <img src="../public/img/logo1.jpg" alt />
         </a>
       </el-menu-item>
       <el-menu-item index="1">发现音乐</el-menu-item>
       <el-menu-item index="2">我的音乐</el-menu-item>
-      <el-menu-item index="">
+      <el-menu-item index="4">
         <el-autocomplete
           v-model="state"
           :fetch-suggestions="querySearchAsync"
           placeholder="音乐/视频/电台/用户"
-          @select="handleSelect"
+          @select="handleSelectjr"
         ></el-autocomplete>
       </el-menu-item>
       <el-submenu index="3">
@@ -31,11 +31,13 @@
         <el-menu-item index="3-3">退出</el-menu-item>
       </el-submenu>
     </el-menu>
+    <!-- <test-footer></test-footer> -->
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+// import footers from "./components/footer.vue"
 export default {
   data() {
     return {
@@ -45,6 +47,9 @@ export default {
       timeout: null
     };
   },
+  // components:{
+  //   "test-footer":footers
+  // },
   methods: {
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
@@ -59,14 +64,10 @@ export default {
           this.$route.path == "/info" ? "" : this.$router.push("/info");
           break;
         case "3-1":
-          this.$route.path == "/mymain"
-            ? ""
-            : this.$router.push("/mymain");
+          this.$route.path == "/mymain" ? "" : this.$router.push("/mymain");
           break;
         case "3-2":
-          this.$route.path == "/setting"
-            ? ""
-            : this.$router.push("/setting");
+          this.$route.path == "/setting" ? "" : this.$router.push("/setting");
           break;
         case "3-3":
           this.$route.path == "/out" ? "" : this.$router.push("/out");
@@ -116,7 +117,7 @@ export default {
         );
       };
     },
-    handleSelect(item) {
+    handleSelectjr(item) {
       console.log(item);
     }
   },
@@ -152,5 +153,13 @@ img {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  position: relative;
+}
+#footer {
+  height: 200px;
+  background-color: red;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 </style>
