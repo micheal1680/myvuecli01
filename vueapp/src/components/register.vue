@@ -9,18 +9,20 @@
       label-width="100px"
       class="demo-ruleForm"
     >
-    <el-form-item label="用户名" prop="name">
-        <el-input v-model="ruleForm.name"></el-input>
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model="ruleForm.username"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="pass">
-        <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+      <el-form-item label="密码" prop="password">
+        <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="确认密码" prop="checkPass">
         <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
       </el-form-item>
-      
+
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">立即注册</el-button>
+
+        <el-button type="primary" @click="registerForm('ruleForm')">立即注册</el-button>
+        <el-button type="primary" @click="login">登录</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form-item>
     </el-form>
@@ -30,72 +32,62 @@
 <script>
 export default {
   data() {
-    
-    var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      } else {
-        if (this.ruleForm.checkPass !== "") {
-          this.$refs.ruleForm.validateField("checkPass");
-        }
-        callback();
-      }
-    };
-    var validatePass2 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm.pass) {
-        callback(new Error("两次输入密码不一致!"));
-      } else {
-        callback();
-      }
-    };
-    var validatePass3 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入用户名"));
-      } else {
-        callback();
-      }
-    };
     return {
       ruleForm: {
-          name:"",
-        pass: "",
-        checkPass: "",
-        
+        username: "",
+        password: "",
+        checkPass: ""
       },
       rules: {
-        pass: [{ validator: validatePass, trigger: "blur" }],
-        checkPass: [{ validator: validatePass2, trigger: "blur" }],
-        name: [{ validator: validatePass3, trigger: "blur" }],
-        
+        name: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          { min: 6, max: 8, message: "长度在 6 到 8 个字符", trigger: "blur" }
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, max: 16, message: "长度在 6 到 16 个字符", trigger: "blur" }
+        ],
+        checkPass: [
+          { required: true, message: "请确认密码", trigger: "blur" },
+          { min: 6, max: 16, message: "长度在 6 到 16 个字符", trigger: "blur" }
+        ]
       }
     };
   },
   methods: {
-    submitForm(formName) {
+    registerForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.axios.post("/resgiter",{
-          name: this.ruleForm.name,
-          password: this.ruleForm.pass
-        }).then((result)=>{
-            // console.log(result)
-            this.$message({
-          message: result.data.msg
-        });
-        if(result.data.code==0){
-             this.$router.push("/login")
-        }
-        })
+          this.axios
+            .post("/register", {
+              username: this.ruleForm.username,
+              password: this.ruleForm.password,
+              checkPass: this.ruleForm.checkPass
+            })
+            .then(res => {
+              if (res.data.code == 0) {
+                this.$message({
+                  message: "注册成功",
+                  type: "success"
+                });
+                this.$router.push("/login");
+              } else if (res.data.code == -2) {
+                this.$message.error("输入密码与上次不一致");
+              } else {
+                this.$message.error("用户名已存在");
+              }
+            });
         } else {
           console.log("error submit!!");
-          return false;  
+          return false;
         }
       });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    login(){
+      this.$router.push("/login")
     }
   }
 };
