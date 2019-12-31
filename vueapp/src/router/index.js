@@ -7,6 +7,8 @@ import setting from "../components/setting.vue"
 import out from "../components/out.vue"
 import register from "../components/register.vue";
 import login from "../components/login.vue"
+import list from  "../components/list.vue";
+import favorite from "../components/favorite.vue"
 
 Vue.use(VueRouter)
 
@@ -20,6 +22,22 @@ const routes = [
     path: '/my',
     name: 'mymusic',
     component: () => import('../views/mymusic.vue')
+  },
+  {
+    path: '/musicPage',
+    name: 'musicPage',
+    component: () => import('../components/musicPage.vue'),
+    children:[
+      {
+        path: '/favorite',
+        component: favorite
+      },
+      {
+        path: '/list',
+        component: list
+      }
+    ]
+
   },
   {
     path: '/info',
