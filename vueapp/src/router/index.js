@@ -16,6 +16,8 @@ import rockMusic from "../components/musicType/rock.vue";
 import balladMusic from "../components/musicType/ballad.vue";
 import electronicMusic from "../components/musicType/electronic.vue";
 import moreMusic from "../components/musicType/more.vue";
+import list from  "../components/list.vue";
+import favorite from "../components/favorite.vue"
 
 Vue.use(VueRouter)
 
@@ -58,6 +60,22 @@ const routes = [
     path: '/my',
     name: 'mymusic',
     component: () => import('../views/mymusic.vue')
+  },
+  {
+    path: '/musicPage',
+    name: 'musicPage',
+    component: () => import('../components/musicPage.vue'),
+    children:[
+      {
+        path: '/favorite',
+        component: favorite
+      },
+      {
+        path: '/list',
+        component: list
+      }
+    ]
+
   },
   {
     path: '/info',
