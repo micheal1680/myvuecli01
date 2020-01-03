@@ -1,5 +1,5 @@
 <template>
-<div>
+<div>  
   <div class="set">
     <div class="lixu">
       <h3 style="width:100px;padding-top:40px;padding-bottom:10px">个人设置</h3>

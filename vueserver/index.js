@@ -158,19 +158,6 @@ app.get("/getInterView",function(req,res){
 	
 })
 
-app.get("/getProducts",function(req,res){
-	var sql="select * from shop_goods where 1 ";
-	if(req.query.keyWord){
-		sql+=`and kw like '%${req.query.keyWord}%'`
-	}
-	sql+="limit 15";
-	mydb.query(sql,function(err,result){
-		if(err){
-			console.log(err);return;
-		}
-		res.json(result)
-	})
-})
 
 //cnpm i --save multer
 //const multer=require("multer")
