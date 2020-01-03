@@ -6,46 +6,78 @@
         <el-carousel-item v-for="(item,index) in lunbotuArr" :key="index">
           <img :src="item.src" alt />
         </el-carousel-item>
+        <!-- 下载客户端 -->
         <div class="download">
           <img src="../assets/Home-images/download/01.png" alt />
           <img src="../assets/Home-images/download/02.png" alt />
           <el-row>
             <el-button type="primary" @click="downloadClient">
               <i class="iconfont icon-xiazai"></i>
-              下载客户端</el-button>
+              下载客户端
+            </el-button>
           </el-row>
           <p class="clientName">PC 安卓 iPhone WP iPad Mac 六大客户端</p>
         </div>
       </el-carousel>
     </div>
-    <!-- 下载客户端 -->
 
-    <!-- 热门推荐导航栏 -->
-    <div>
-      <el-menu
-        :default-active="activeIndex"
-        class="el-menu-demo"
-        mode="horizontal"
-        @select="handleSelect"
-      >
-        <el-menu-item index="1">热门推荐</el-menu-item>
-        <el-menu-item index="2">华语|</el-menu-item>
-        <el-menu-item index="3">流行|</el-menu-item>
-        <el-menu-item index="4">摇滚|</el-menu-item>
-        <el-menu-item index="5">民谣|</el-menu-item>
-        <el-menu-item index="6">电子|</el-menu-item>
-        <el-menu-item index="7">更多</el-menu-item>
-      </el-menu>
-      <div class="line"></div>
+    <div class="musicList">
+      <!-- 热门推荐列表 musicList左边部分-->
+      <div class="hot-list">
+        <el-container>
+          <el-aside width="730px">
+            <!-- 热门推荐导航栏 -->
+            <el-menu
+              :default-active="activeIndex"
+              class="el-menu-demo hot-nav"
+              mode="horizontal"
+              @select="handleSelect"
+            >
+              <el-menu-item class="hotTag" index="1">热门推荐</el-menu-item>
+              <el-menu-item class="typeTag" index="2">华语</el-menu-item>
+              <el-menu-item index="3">流行</el-menu-item>
+              <el-menu-item index="4">摇滚</el-menu-item>
+              <el-menu-item index="5">民谣</el-menu-item>
+              <el-menu-item index="6">电子</el-menu-item>
+              <el-menu-item index="7">更多</el-menu-item>
+            </el-menu>
+
+            <div class="hot-song-cover">
+              <div class="single-song-cover" v-for="(item,index) in hotMusicCover" :key="index">
+                <img :src="item.picture_url" alt />
+                <audio class="audio" :src="item.music_url" controls="controls"></audio>
+              </div>
+            </div>
+
+            <el-menu
+              :default-active="activeIndex"
+              class="el-menu-demo hot-nav"
+              mode="horizontal"
+              @select="handleSelect"
+            >
+              <el-menu-item class="hotTag" index="1">新碟上架</el-menu-item>
+
+            </el-menu>
+
+            <div class="hot-song-cover">
+              <div class="single-song-cover" v-for="(item,index) in hotMusicCover" :key="index">
+                <img :src="item.picture_url" alt />
+                <audio class="audio" :src="item.music_url" controls="controls"></audio>
+              </div>
+            </div>
+
+          </el-aside>
+          <!-- main -->
+          <el-main class="home-main">
+            <div class="home-login">
+              <p>登录网易云音乐，可以享受无限收藏的乐趣，并且无限同步到手机</p>
+              <el-button class="home-login-button" type="primary" @click="homeLogin">用户登录</el-button>
+            </div>
+          </el-main>
+        </el-container>
+      </div>
     </div>
-    <!-- 热门推荐列表 -->
-    <el-container>
-      <el-aside width="200px">
-        Aside
-        <hotRecommend></hotRecommend>
-      </el-aside>
-      <el-main>Main</el-main>
-    </el-container>
+
     <!-- 底部信息 -->
     <div></div>
     <router-view></router-view>
@@ -54,6 +86,7 @@
 
 <script>
 // @ is an alias to /src
+import axios from "axios";
 import lunbotu1 from "../assets/Home-images/lunbotu/01.jpg";
 import lunbotu2 from "../assets/Home-images/lunbotu/02.jpg";
 import lunbotu3 from "../assets/Home-images/lunbotu/03.jpg";
@@ -62,7 +95,6 @@ import lunbotu5 from "../assets/Home-images/lunbotu/05.jpg";
 import lunbotu6 from "../assets/Home-images/lunbotu/06.jpg";
 import lunbotu7 from "../assets/Home-images/lunbotu/07.jpg";
 import lunbotu8 from "../assets/Home-images/lunbotu/08.jpg";
-import hotRecommend from "../components/hotRecommend.vue";
 //import footer from "../components/footer.vue"  不能用footer作为组件名
 
 export default {
@@ -70,6 +102,7 @@ export default {
   data: function() {
     return {
       activeIndex: "0",
+      hotMusicCover: [],
       lunbotuArr: [
         { src: lunbotu1 },
         { src: lunbotu2 },
@@ -82,84 +115,103 @@ export default {
       ]
     };
   },
+  created() {
+    // var that = this;
+    axios.get("/getHotmusic").then(data => {
+      this.hotMusicCover = data.data;      
+    });
+  },
   methods: {
-    downloadClient(){
-      this.$router.push({path: "/downloadclient"})
+    downloadClient() {
+      this.$router.push({ path: "/downloadclient" });
+    },
+    homeLogin() {
+      this.$router.push({ path: "/login" });
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
       console.log(this.$route.path);
       switch (key) {
         case "1":
-          this.$router.push("/discover");
+          this.$router.push("/playlist");
           break;
         case "2":
-          this.$route.path == "/chinese" ? "" : this.$router.push("/chinese");
+          this.$route.path == "/playlist/chinese"
+            ? ""
+            : this.$router.push("/playlist/chinese");
           break;
         case "3":
-          this.$route.path == "/popular" ? "" : this.$router.push("/popular");
+          this.$route.path == "/playlist/popular"
+            ? ""
+            : this.$router.push("/playlist/popular");
           break;
         case "4":
-          this.$route.path == "/rock" ? "" : this.$router.push("/rock");
+          this.$route.path == "/playlist/rock"
+            ? ""
+            : this.$router.push("/playlist/rock");
           break;
         case "5":
-          this.$route.path == "/ballad" ? "" : this.$router.push("/ballad");
+          this.$route.path == "/playlist/ballad"
+            ? ""
+            : this.$router.push("/playlist/ballad");
           break;
         case "6":
-          this.$route.path == "/electronic"
+          this.$route.path == "/playlist/electronic"
             ? ""
-            : this.$router.push("/electronic");
+            : this.$router.push("/playlist/electronic");
           break;
         case "7":
-          this.$route.path == "/more" ? "" : this.$router.push("/more");
+          this.$route.path == "/playlist/more"
+            ? ""
+            : this.$router.push("/playlist/more");
           break;
       }
       console.log(this.$route.path);
     },
     setActiveIndex() {
       switch (this.$route.path) {
-        case "/discover":
+        case "/playlist":
           this.activeIndex = 1;
           break;
-        case "/chinese":
+        case "/playlist/chinese":
           this.activeIndex = 2;
           break;
-        case "/popular":
+        case "/playlist/popular":
           this.activeIndex = 3;
           break;
-        case "/rock":
+        case "/playlist/rock":
           this.activeIndex = 4;
           break;
-        case "/ballad":
+        case "/playlist/ballad":
           this.activeIndex = 5;
           break;
-        case "/electronic":
+        case "/playlist/electronic":
           this.activeIndex = 6;
           break;
-        case "/more":
+        case "/playlist/more":
           this.activeIndex = 7;
           break;
       }
     }
-  },
-  components: {
-    hotRecommend: hotRecommend
-    // "footer": footer
   }
 };
 </script>
 
 <style lang="scss">
+//scoped属性问题
+
 .lunbo {
   width: 100%;
   height: 285px;
   position: relative;
+  margin-top: -1px;
   .el-carousel__button {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background-color: fff;
   }
+
   .el-carousel__item {
     height: 283.88px;
   }
@@ -167,6 +219,12 @@ export default {
     height: 283.88px;
   }
 }
+
+//轮播图组件的滚动条，不起作用
+.el-carousel .el-carousel--horizontal {
+  overflow-x: unset;
+}
+
 .el-carousel__item img {
   width: 730px;
   height: 283.88px;
@@ -191,7 +249,7 @@ export default {
     border: none;
     margin-top: 185px;
   }
-  .icon-xiazai{
+  .icon-xiazai {
     font-size: 26px;
     vertical-align: middle;
   }
@@ -220,40 +278,61 @@ export default {
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
 }
-
-// 热门推荐
-.el-header,
-.el-footer {
-  background-color: #b3c0d1;
-  color: #333;
-  text-align: center;
-  line-height: 60px;
+//音乐列表
+.musicList {
+  margin: 0 196px 0 185px;
+  border: 1px solid #ccc;
 }
-
-.el-aside {
-  background-color: #d3dce6;
-  color: #333;
-  text-align: center;
-  line-height: 200px;
+//热门推荐导航栏
+// .el-menu-demo{
+//   border-bottom: 2px solid #C10D0C;
+// }
+.hot-nav {
+  width: 730px;
+  border-bottom: 3px solid red;
 }
-
-.el-main {
-  background-color: #e9eef3;
-  color: #333;
-  text-align: center;
-  line-height: 160px;
+// 热门推荐列表 musicList左边部分
+.hot-song-cover {
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  
 }
-
-body > .el-container {
-  margin-bottom: 40px;
+.single-song-cover {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 10px 20px;
 }
-
-.el-container:nth-child(5) .el-aside,
-.el-container:nth-child(6) .el-aside {
-  line-height: 260px;
+.audio {
+  width: 140px;
+  height: 20px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
 }
+//musicList右边部分
 
-.el-container:nth-child(7) .el-aside {
-  line-height: 320px;
+.hot-list {
+  .el-main {
+    margin: 0;
+    padding: 0;
+  }
+}
+.home-login {
+  width: 250px;
+  height: 130px;
+  background-color: #ececec;
+  .home-login-button {
+    background-color: #cd0e15;
+    border: none;
+    width: 100px;
+    height: 30px;
+    line-height: 0px;
+  }
+  p {
+    font-size: 12px;
+    line-height: 14px;
+  }
 }
 </style>

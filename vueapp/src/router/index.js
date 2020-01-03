@@ -9,7 +9,7 @@ import register from "../components/register.vue";
 import login from "../components/login.vue"
 import product from '../views/product.vue'
 // 牛---添加的音乐分类子组件
-import discover from "../views/discover.vue"
+import playlist from "../views/playlist.vue"
 import chineseMusic from "../components/musicType/chinese.vue";
 import popularMusic from "../components/musicType/popular.vue";
 import rockMusic from "../components/musicType/rock.vue";
@@ -21,6 +21,7 @@ import favorite from "../components/favorite.vue";
 
 import downloadclient from "../views/downloadclient.vue";
 
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -30,34 +31,36 @@ const routes = [
     component: Home
   },
   {
-    path: '/discover',
-    name: 'discover',
-    component: discover
-  },
-  {
-    path: '/chinese',
-    component: chineseMusic
-  },
-  {
-    path: '/popular',
-    component: popularMusic
-  },
-  {
-    path: '/rock',
-    component: rockMusic
-  },
-  {
-    path: '/ballad',
-    component: balladMusic
-  },
-  {
-    path: '/electronic',
-    component: electronicMusic
-  },
-  {
-    path: '/more',
-    component: moreMusic
-  },
+    path: '/playlist',
+    name: 'playlist',
+    component: playlist,
+    children: [
+      {
+        path: 'chinese',
+        component: chineseMusic
+      },
+      {
+        path: 'popular',
+        component: popularMusic
+      },
+      {
+        path: 'rock',
+        component: rockMusic
+      },
+      {
+        path: 'ballad',
+        component: balladMusic
+      },
+      {
+        path: 'electronic',
+        component: electronicMusic
+      },
+      {
+        path: 'more',
+        component: moreMusic
+      }
+    ]
+  },  
   {
     path: '/downloadclient',
     component: downloadclient
