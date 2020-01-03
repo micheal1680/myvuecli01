@@ -1,6 +1,6 @@
 <template>
-  <div class="big">
-    <div class="box">
+  <div class="con">
+    <div class="num">
       <el-container style="height: 500px; border: 1px solid #eee">
         <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
           <el-menu :default-active="activeIndex" @select="handleSelect">
@@ -47,19 +47,19 @@ export default {
     handleSelect(key, keyPath) {
       switch (key) {
         case "1-1":
-          this.$route.path == "/favorite" ? "" : this.$router.push("/favorite");
+          this.$route.path == "/musicPage/favorite" ? "" : this.$router.push("/musicPage/favorite");
           break;
         case "1-2":
-          this.$route.path == "/list" ? "" : this.$router.push("/list");
+          this.$route.path == "/musicPage/list" ? "" : this.$router.push("/musicPage/list");
           break;
       }
     },
     setActiveIndex() {
       switch (this.$route.path) {
-        case "/favorite":
+        case "/musicPage/favorite":
           this.activeIndex = "1-1";
           break;
-        case "/list":
+        case "/musicPage/list":
           this.activeIndex = "1-2";
           break;
       }
@@ -108,10 +108,10 @@ export default {
 .el-aside {
   color: #333;
 }
-.box {
-  margin: 0 80px;
+.num {
+  margin: 0 120px;
 }
-.big {
+.con {
   background-color: #f5f5f5;
 }
 </style>

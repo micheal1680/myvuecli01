@@ -9,8 +9,7 @@ import register from "../components/register.vue";
 import login from "../components/login.vue"
 import product from '../views/product.vue'
 // 牛---添加的音乐分类子组件
-import discover from "../views/discover.vue"
-
+import playlist from "../views/playlist.vue"
 import chineseMusic from "../components/musicType/chinese.vue";
 import popularMusic from "../components/musicType/popular.vue";
 import rockMusic from "../components/musicType/rock.vue";
@@ -18,8 +17,14 @@ import balladMusic from "../components/musicType/ballad.vue";
 import electronicMusic from "../components/musicType/electronic.vue";
 import moreMusic from "../components/musicType/more.vue";
 import list from  "../components/list.vue";
-import favorite from "../components/favorite.vue"
+
+
 import productDetails from "../components/productDetails.vue"
+
+import favorite from "../components/favorite.vue";
+
+import downloadclient from "../views/downloadclient.vue";
+
 
 Vue.use(VueRouter)
 
@@ -30,33 +35,39 @@ const routes = [
     component: Home
   },
   {
-    path: '/discover',
-    name: 'discover',
-    component: discover
-  },
+    path: '/playlist',
+    name: 'playlist',
+    component: playlist,
+    children: [
+      {
+        path: 'chinese',
+        component: chineseMusic
+      },
+      {
+        path: 'popular',
+        component: popularMusic
+      },
+      {
+        path: 'rock',
+        component: rockMusic
+      },
+      {
+        path: 'ballad',
+        component: balladMusic
+      },
+      {
+        path: 'electronic',
+        component: electronicMusic
+      },
+      {
+        path: 'more',
+        component: moreMusic
+      }
+    ]
+  },  
   {
-    path: '/chinese',
-    component: chineseMusic
-  },
-  {
-    path: '/popular',
-    component: popularMusic
-  },
-  {
-    path: '/rock',
-    component: rockMusic
-  },
-  {
-    path: '/ballad',
-    component: balladMusic
-  },
-  {
-    path: '/electronic',
-    component: electronicMusic
-  },
-  {
-    path: '/more',
-    component: moreMusic
+    path: '/downloadclient',
+    component: downloadclient
   },
   {
     path: '/my',
@@ -69,15 +80,14 @@ const routes = [
     component: () => import('../components/musicPage.vue'),
     children:[
       {
-        path: '/favorite',
+        path: 'favorite',
         component: favorite
       },
       {
-        path: '/list',
+        path: 'list',
         component: list
-      }
+      },
     ]
-
   },
   {
     path: '/info',
@@ -120,4 +130,17 @@ const router = new VueRouter({
   // mode: 'history'
 })
 
+// 全局导航守卫
+router.beforeEach(function(to,from,next){
+  console.log(to,from)
+  if(to.path=="/my"){
+    if(localStorage.getItem("loginStatus")){
+      next()
+    }else{
+      next("/login");
+    }
+  }else{
+    next()
+  }
+})
 export default router
