@@ -19,6 +19,7 @@ import electronicMusic from "../components/musicType/electronic.vue";
 import moreMusic from "../components/musicType/more.vue";
 import list from  "../components/list.vue";
 import favorite from "../components/favorite.vue"
+import productDetails from "../components/productDetails.vue"
 
 Vue.use(VueRouter)
 
@@ -105,8 +106,12 @@ const routes = [
   },
   {
     path: '/product',
-    component: product
-  }
+    component: product,
+   
+  },
+  {path:"/productDetails",
+      component:productDetails
+    }
 ]
 
 const router = new VueRouter({

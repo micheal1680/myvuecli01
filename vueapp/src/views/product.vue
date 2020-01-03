@@ -4,11 +4,11 @@
       <el-container>
         <el-header class="toubu">
           <div>网易云音乐.商城</div>
-          <div >
+          <div>
             <!-- <el-input placeholder="请输入搜索内容" prefix-icon="el-icon-search" v-model="input2"  @keyup.enter="serachproduct" > -->
-    
+
             <!-- </el-input> -->
-           <input type="text" placeholder="请输入搜索内容" v-model="input2"  @keyup.enter="serachproduct">
+            <input type="text" placeholder="请输入搜索内容" v-model="input2" @keyup.enter="serachproduct" />
           </div>
 
           <div>购物车</div>
@@ -60,24 +60,26 @@
           </div>
           <!-- 热门商品 -->
           <div>热门商品</div>
+          
           <div class="hot">
-            <div class="hot-product" v-for="(item, index) in pruducthot" :key="index">
-              <div class="img_pr">
-                <img :src="item.picture_url" alt />
+            <div class="hot-product" v-for="(item, myid) in pruducthot" :key="myid=item.id">
+              <div class="img_pr" @click="toProductDetails(item.id)" >
+                <!-- <router-link to="/product/productDetails"><img :src="item.picture_url" alt /></router-link> -->
+                <img :src="item.picture_url" />
               </div>
-              <div>{{item.name}}</div>
+              <div @click="toProductDetails(item.id)">{{item.name}}</div>
               <div>￥{{item.newprice}}</div>
+              
             </div>
           </div>
         </el-main>
         <!-- 脚部 -->
-        <el-footer>服务条款| 隐私政策| 儿童隐私政策| 版权投诉指引| 意见反馈
-
-网易公司版权所有©1997-2019杭州乐读科技有限公司运营：浙网文[2018] 3506-263号
-
-违法和不良信息举报电话：0571-89853516举报邮箱：ncm5990@163.com
-
-粤B2-20090191-18举报邮箱：工业和信息化部备案管理系统网站</el-footer>
+        <el-footer>
+          服务条款| 隐私政策| 儿童隐私政策| 版权投诉指引| 意见反馈
+          网易公司版权所有©1997-2019杭州乐读科技有限公司运营：浙网文[2018] 3506-263号
+          违法和不良信息举报电话：0571-89853516举报邮箱：ncm5990@163.com
+          粤B2-20090191-18举报邮箱：工业和信息化部备案管理系统网站
+        </el-footer>
       </el-container>
     </div>
   </div>
@@ -86,7 +88,6 @@
 <script>
 export default {
   data() {
-       
     return {
       input2: "",
       activeIndex2: "1",
@@ -102,20 +103,31 @@ export default {
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
-    serachproduct(){
-        console.log("搜索1111_________")
-        this.axios.get("/getproducts",{
-            params:{
-                keyword:this.input2
-            }
-        }).then(result => {
-    //   console.log(result);
-      this.pruducthot = result.data;
-    });
-    }
+    serachproduct() {
+      // console.log("搜索1111_________")
+      this.axios
+        .get("/getproducts", {
+          params: {
+            keyword: this.input2
+          }
+        })
+        .then(result => {
+          //   console.log(result);
+          this.pruducthot = result.data;
+        });
+    },
+    toProductDetails(itemid){
+      this.$router.push({path :"/productDetails",
+      query:{
+        id:itemid
+      }
+      }, )
+     
+      
+    },
+
   },
- 
- 
+
   created() {
     this.axios.get("/getproducts").then(result => {
       console.log(result);
@@ -133,8 +145,8 @@ export default {
   text-align: center;
   line-height: 60px;
 }
-.el-footer{
-    background-color: #b3c0d1;
+.el-footer {
+  background-color: #b3c0d1;
 }
 
 .el-main {
