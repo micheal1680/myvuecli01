@@ -76,15 +76,14 @@ const routes = [
     component: () => import('../components/musicPage.vue'),
     children:[
       {
-        path: '/favorite',
+        path: 'favorite',
         component: favorite
       },
       {
-        path: '/list',
+        path: 'list',
         component: list
-      }
+      },
     ]
-
   },
   {
     path: '/info',
@@ -123,4 +122,17 @@ const router = new VueRouter({
   // mode: 'history'
 })
 
+// 全局导航守卫
+router.beforeEach(function(to,from,next){
+  console.log(to,from)
+  if(to.path=="/my"){
+    if(localStorage.getItem("loginStatus")){
+      next()
+    }else{
+      next("/login");
+    }
+  }else{
+    next()
+  }
+})
 export default router

@@ -24,16 +24,21 @@
           @select="handleSelectjr"
         ></el-autocomplete>
       </el-menu-item>
+      <el-menu-item index="5">商城</el-menu-item>
       <el-submenu index="3">
         <template slot="title">个人中心</template>
         <el-menu-item index="3-1">我的主页</el-menu-item>
         <el-menu-item index="3-2">个人设置</el-menu-item>
         <el-menu-item index="3-3">退出</el-menu-item>
       </el-submenu>
-      <el-menu-item index="5">商城</el-menu-item>
     </el-menu>
     <!-- <test-footer></test-footer> -->
-    <router-view></router-view>
+    <!-- <router-view></router-view> -->
+
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"></router-view>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
   </div>
 </template>
 
@@ -71,7 +76,7 @@ export default {
           this.$route.path == "/setting" ? "" : this.$router.push("/setting");
           break;
         case "3-3":
-          this.$route.path == "/out" ? "" : this.$router.push("/out");
+          this.$route.path == "/" ? "" : this.$router.push("/");
           break;
         case "5":
           this.$route.path == "/product" ? "" : this.$router.push("/product");
@@ -94,9 +99,9 @@ export default {
         case "/setting":
           this.activeIndex = "3-2";
           break;
-        case "/out":
-          this.activeIndex = "3-3";
-          break;
+        // case "/out":
+        //   this.activeIndex = "3-3";
+        //   break;
         case "/product":
           this.activeIndex = "5";
           break;
