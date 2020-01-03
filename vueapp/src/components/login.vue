@@ -1,7 +1,7 @@
 <template>
   <div class="logincss">
     这里是登录页面
-    <el-form ref="ruleForm" :model="ruleForm" label-width="80px">
+    <el-form ref="ruleForm" :model="ruleForm" label-width="80px" style="width:450px">
       <el-form-item label="用户名">
         <el-input v-model="ruleForm.username"></el-input>
       </el-form-item>
@@ -23,9 +23,10 @@
 export default {
   data() {
     return {
+      msg: "",
       ruleForm: {
         username: "",
-        password: "",
+        password: ""
       },
       rules: {
         name: [
@@ -40,17 +41,43 @@ export default {
     };
   },
   methods: {
+    // onSubmit(formName) {
+    // 		this.$refs[formName].validate((valid) => {
+    // 			console.log(valid)
+    // 			if (valid) {
+    //         alert('登录成功!');
+    //         this.$router.push("/musicPage")
+    // 			} else {
+    // 				console.log('登录失败!');
+    // 				return false;
+    // 			}
+    // 		});
+    // },
     onSubmit(formName) {
-				this.$refs[formName].validate((valid) => {
-					console.log(valid)
-					if (valid) {
-            alert('登录成功!');
-            this.$router.push("/musicPage")
-					} else {
-						console.log('登录失败!');
-						return false;
-					}
-				});
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.axios
+            .post("/userlogin", {
+              username: this.ruleForm.username,
+              password: this.ruleForm.password
+            })
+            .then(res => {
+              if (res.data.status == 0) {
+                alert("登录成功!");
+                this.msg = res.data.msg;
+                this.$router.push("/musicPage");
+              } else if (res.data.status == 1) {
+                alert("用户密码输入错误!");
+                this.msg = res.data.msg;
+              } else {
+                alert("用户名输入错误!");
+                this.msg = res.data.msg;
+              }
+            });
+        } else{
+          return false;
+        }
+      });
     },
     register() {
       this.$router.push("/register");

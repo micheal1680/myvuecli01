@@ -8,6 +8,7 @@
       ref="ruleForm"
       label-width="100px"
       class="demo-ruleForm"
+      style="width:450px"
     >
       <el-form-item label="用户名" prop="username">
         <el-input v-model="ruleForm.username"></el-input>
@@ -39,7 +40,7 @@ export default {
         checkPass: ""
       },
       rules: {
-        name: [
+        username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
           { min: 6, max: 8, message: "长度在 6 到 8 个字符", trigger: "blur" }
         ],
