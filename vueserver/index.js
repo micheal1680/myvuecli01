@@ -157,6 +157,55 @@ app.get("/getInterView",function(req,res){
 	})
 	
 })
+// 商品展示
+app.get("/getproducts",function(req,res){
+	console.log("接收到前端发起的商品 请求");
+	// console.log(req.query);
+	var sql="select * from products where 1 ";
+	
+	if(req.query.keyword){
+		sql+=`and name like '%${req.query.keyword}%' `
+	}
+	
+	if(req.query.type){
+		sql+=`and deptid=${req.query.type}`
+	}
+	
+	mydb.query(sql,function(err,result){
+		if(err){
+			console.log(err);return;
+		}
+		// console.log(sql,result)
+		res.json(result)
+	})
+	
+}),
+// 获取单个产品详情
+app.get("/productDetails",function(req,res){
+// console.log(req.query.id);
+let sql =`select * from products where id='${req.query.id}' `;
+
+mydb.query(sql,function(err,result){
+	console.log(result[0].img_id)
+	if(result[0].img_id){
+		let sql =`select * from productdetails where id='${result[0].img_id}' `;
+		mydb.query(sql,function(err,data){
+			
+			res.send({
+				data:data,
+				result:result
+
+			})
+
+		})
+	}else{
+		res.send({data:"没有详情页面"})
+
+	}
+	
+})
+
+})
 
 
 //cnpm i --save multer

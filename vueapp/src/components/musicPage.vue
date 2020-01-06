@@ -6,7 +6,7 @@
           <el-menu :default-active="activeIndex" @select="handleSelect">
             <el-submenu index="1">
               <template slot="title">
-                <button>+新建</button>
+                <!-- <button>+新建</button> -->
                 <i class="el-icon-message"></i>创建的歌单
               </template>
               <el-menu-item-group>
