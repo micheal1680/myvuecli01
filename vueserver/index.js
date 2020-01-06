@@ -121,6 +121,7 @@ app.post("/register", (req, res) => {
 
 })
 
+//获取所有音乐列表
 app.get("/getAllmusic",function(req,res){
 	var sql = "select * from allmusic where 1 ";
 	mydb.query(sql,function(err,result){
@@ -132,6 +133,7 @@ app.get("/getAllmusic",function(req,res){
 	})
 })
 
+//获取热门推荐音乐列表（用的是所有音乐的前8条数据）
 app.get("/getHotmusic",function(req,res){
 	let sql = "select * from allmusic limit 8";
 	mydb.query(sql,function(err,result){
@@ -143,34 +145,19 @@ app.get("/getHotmusic",function(req,res){
 	})
 })
 
-app.get("/getInterView",function(req,res){
-	var sql="select * from questions where 1 ";
-	
-	if(req.query.title){
-		sql+=`and title like '%${req.query.title}%'`
-	}
+app.get("/getSingerList",function(req,res){
+	let sql = "select * from singer limit 10";
 	mydb.query(sql,function(err,result){
 		if(err){
 			console.log(err);return;
+		} else {
+			res.json(result)
 		}
-		res.json(result)
 	})
-	
 })
 
-app.get("/getProducts",function(req,res){
-	var sql="select * from shop_goods where 1 ";
-	if(req.query.keyWord){
-		sql+=`and kw like '%${req.query.keyWord}%'`
-	}
-	sql+="limit 15";
-	mydb.query(sql,function(err,result){
-		if(err){
-			console.log(err);return;
-		}
-		res.json(result)
-	})
-});
+
+
 // 商品展示
 app.get("/getproducts",function(req,res){
 	console.log("接收到前端发起的商品 请求");

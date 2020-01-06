@@ -20,11 +20,22 @@
       <div class="single-song-cover" v-for="(item,index) in allmusicCover" :key="index">
         <img :src="item.picture_url" alt />
         <audio class="audio" :src="item.music_url" controls="controls"></audio>
-      </div> 
-      
+      </div>
     </div>
 
-    <router-link to></router-link>
+    <!-- 分页组件 -->
+    <!-- <div class="block">
+      <span class="demonstration">分页</span>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage4"
+        :page-sizes="[20, 40, 60, 80]"
+        :page-size="20"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="400"
+      ></el-pagination>
+    </div> -->
   </div>
 </template>
 
@@ -35,17 +46,15 @@ export default {
   data: function() {
     return {
       allmusic: [],
-      allmusicCover: []
+      allmusicCover: [],
+      // currentPage4: 1
     };
   },
 
   created() {
     var that = this;
     axios.get("/getAllmusic").then(res => {
-      that.allmusicCover = res.data;      
-      console.log("---allmusicCover---");
-      console.log(that.allmusicCover[0].picture_url)
-      
+      that.allmusicCover = res.data;
     });
   },
   mounted() {},
@@ -57,7 +66,13 @@ export default {
       } else {
         typelist.style.display = "none";
       }
-    }
+    },
+    // handleSizeChange(val) {
+    //   console.log(`每页 ${val} 条`);
+    // },
+    // handleCurrentChange(val) {
+    //   console.log(`当前页: ${val}`);
+    // }
   }
 };
 </script>
@@ -73,7 +88,7 @@ body {
   border: 1px solid #ccc;
 }
 .all-song-cover {
-  display:flex;
+  display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 0 15px;
