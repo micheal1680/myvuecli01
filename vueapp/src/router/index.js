@@ -4,7 +4,6 @@ import Home from '../views/Home.vue'
 import Info from '../views/info.vue'
 import mymain from "../components/mymain.vue"
 import setting from "../components/setting.vue"
-import out from "../components/out.vue"
 import register from "../components/register.vue";
 import login from "../components/login.vue"
 import product from '../views/product.vue'
@@ -87,7 +86,17 @@ const routes = [
         path: 'list',
         component: list
       },
-    ]
+    ],
+    beforeEach(to,from,next){
+      if(localStorage.getItem("loginStatus")){
+        next()
+      }else{
+        next("/my")
+      }
+    },
+    meta:{
+      keeplive:false
+    }
   },
   {
     path: '/info',
@@ -101,10 +110,6 @@ const routes = [
   {
     path: '/setting',
     component: setting
-  },
-  {
-    path: '/out',
-    component: out
   },
   {
     path: '/register',
@@ -133,11 +138,11 @@ const router = new VueRouter({
 // 全局导航守卫
 router.beforeEach(function(to,from,next){
   console.log(to,from)
-  if(to.path=="/my"){
+  if(to.path=="/musicPage"){
     if(localStorage.getItem("loginStatus")){
       next()
     }else{
-      next("/login");
+      next("/my");
     }
   }else{
     next()

@@ -155,9 +155,12 @@ app.get("/getSingerList",function(req,res){
 		}
 	})
 })
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 1f353ac55e1866c0989698f640de9cd445e96cd6
 // 商品展示
 app.get("/getproducts",function(req,res){
 	console.log("接收到前端发起的商品 请求");

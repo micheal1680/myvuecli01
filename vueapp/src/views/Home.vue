@@ -11,7 +11,7 @@
           <img src="../assets/Home-images/download/01.png" alt />
           <img src="../assets/Home-images/download/02.png" alt />
           <el-row>
-            <el-button type="primary" @click="downloadClient">
+            <el-button type="primary" @click="downloadClient" >
               <i class="iconfont icon-xiazai"></i>
               下载客户端
             </el-button>
