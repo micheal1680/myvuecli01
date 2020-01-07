@@ -16,11 +16,20 @@ mydb.connect();//7、发起数据库连接
 
 var app=express();//2、创建
 //9、处理跨域
-app.use(function(req,res,next){
-	res.setHeader("Access-Control-Allow-Origin","*");
-	res.setHeader("Access-Control-Allow-Headers","content-type");
-	next();
-})
+// app.use(function(req,res,next){
+// 	res.setHeader("Access-Control-Allow-Origin","*");
+// 	res.setHeader("Access-Control-Allow-Headers","content-type");
+// 	next();
+// })
+
+app.all('*', function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Allow-Methods', '*');
+    res.header('Content-Type', 'application/json;charset=utf-8');
+    next();
+});
+
 app.use(bodyPaser.json());//处理前端传递数据为json 格式
 app.use(bodyPaser.urlencoded({
 	extended:true	//让后端识别urlencoded ，gzip 文件格式
@@ -145,6 +154,28 @@ app.get("/getHotmusic",function(req,res){
 	})
 })
 
+//首页登录后展示用户信息，根据用户名获取头像
+app.post("/getUserPicture",function(req,res){
+	
+	let sql = "select * from user where 1 "
+	if(req.body.username){
+		sql += `and username = '${req.body.username}'`		
+	}
+	console.log(sql)
+	
+	mydb.query(sql,function(err,result){
+		if(err){
+			console.log(err)
+			return;
+		} else {
+			res.json(result)
+			console.log(result)
+			console.log(req.body.username)
+		}
+	})
+})
+
+//首页获取歌手列表
 app.get("/getSingerList",function(req,res){
 	let sql = "select * from singer limit 10";
 	mydb.query(sql,function(err,result){
@@ -155,12 +186,6 @@ app.get("/getSingerList",function(req,res){
 		}
 	})
 })
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 1f353ac55e1866c0989698f640de9cd445e96cd6
 // 商品展示
 app.get("/getproducts",function(req,res){
 	console.log("接收到前端发起的商品 请求");

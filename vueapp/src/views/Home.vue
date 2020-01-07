@@ -11,7 +11,7 @@
           <img src="../assets/Home-images/download/01.png" alt />
           <img src="../assets/Home-images/download/02.png" alt />
           <el-row>
-            <el-button type="primary" @click="downloadClient" >
+            <el-button type="primary" @click="downloadClient">
               <i class="iconfont icon-xiazai"></i>
               下载客户端
             </el-button>
@@ -91,20 +91,21 @@
 
           <!-- 右侧main -->
           <el-main class="home-main">
+
             <!-- 登录 -->
-            <div class="home-login" >
+            <div class="home-login" v-if="isLogedIn">
               <p>登录网易云音乐，可以享受无限收藏的乐趣，并且无限同步到手机</p>
               <el-button class="home-login-button" type="primary" @click="homeLogin">用户登录</el-button>
             </div>
 
             <!-- 登录后显示个人信息 -->
-            <div class="home-userinfo">
+            <div class="home-userinfo" v-else>
               <img :src="userPicture" alt />
               <div>{{username}}</div>
               <div>
                 <p>LV.{{level}}</p>
                 <el-row>
-                  <el-button type="primary" @click="singIn">签到</el-button>
+                  <el-button type="primary" @click="signIn">签到</el-button>
                 </el-row>
               </div>
               <div>
@@ -129,15 +130,19 @@
       </div>
     </div>
 
+    <!-- 底部音乐播放控制器 -->
+    <musicplay></musicplay>
+    <router-view></router-view>
     <!-- 底部信息 -->
     <div></div>
-    <router-view></router-view>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
+import Bus from "../bus/Bus.js"
 import axios from "axios";
+import musicplay from "../components/musicplay.vue"
 import lunbotu1 from "../assets/Home-images/lunbotu/01.jpg";
 import lunbotu2 from "../assets/Home-images/lunbotu/02.jpg";
 import lunbotu3 from "../assets/Home-images/lunbotu/03.jpg";
@@ -150,10 +155,15 @@ import lunbotu8 from "../assets/Home-images/lunbotu/08.jpg";
 
 export default {
   name: "home",
+  // props: {
+  //   isLogin: Boolean
+  // },
   data: function() {
     return {
       activeIndex: "0",
       hotMusicCover: [],
+      // isLogedIn: this.isLogin,
+      isLogedIn: false,
       userPicture: "",
       username: "",
       level: 0,
@@ -173,28 +183,62 @@ export default {
       ]
     };
   },
+  components: {
+    "musicplay": musicplay
+  },
   created() {
-    // var that = this;
+    console.log("---进入created---");   
+
     axios.get("/getHotmusic").then(res => {
       this.hotMusicCover = res.data;
-      console.log(this.hotMusicCover)
+      console.log(this.hotMusicCover);
     });
     axios.get("/getSingerList").then(res => {
       this.singerList = res.data;
-    });
+    }); 
   },
+  mounted(){
+    
+  },
+  updated() {
+    console.log("---进入update---");
+    //登录回到home页面后改变登录框    
+    if(localStorage.getItem("loginStatus")=="true"){      
+      this.isLogedIn = false
+    } else {
+      this.isLogedIn = true
+      console.log(this.isLogedIn)  //true
+    }
+    //登录后获取用户名，头像
+    this.username = localStorage.getItem("username");
+      axios
+        .post("/getUserPicture", {          
+            username: this.username          
+        })
+        .then(res => {
+          this.userPicture = res.data[0].url          
+        });
+  },
+  //watch没有被触发
   watch: {
-    isPlay() {}
+    isLogedIn(){
+      console.log("---进入mounted---");
+      Bus.$on("changeLoginStatus",(val)=>{
+      this.isLogedIn = val
+    })
+    }
   },
   methods: {
     downloadClient() {
       this.$router.push({ path: "/downloadclient" });
-      //回到home页面改变登录框
     },
+    
     homeLogin() {
       this.$router.push({ path: "/login" });
     },
-    singIn() {},
+    signIn() {      
+      
+    },
     handleSelect(key, keyPath) {
       switch (key) {
         case "1":
@@ -362,7 +406,6 @@ export default {
 .musicList {
   margin: 0 180px 0 185px;
   border: 1px solid #ccc;
-  
 }
 //热门推荐导航栏
 // .el-menu-demo{
@@ -371,12 +414,12 @@ export default {
 
 .hot-nav {
   width: 730px;
-  border-bottom: 3px solid red;  
+  border-bottom: 3px solid red;
 }
 
-.hotTag{
-    color: #cd0e15;
-  }
+.hotTag {
+  color: #cd0e15;
+}
 
 // 热门推荐列表 musicList左边部分
 .hot-song-cover {
@@ -431,9 +474,7 @@ export default {
   width: 250px;
   height: 150px;
   background-color: #ececec;
-  margin: 0;
-  padding: 0
-  
+  font-size: 14px;
 }
 
 .singerlist {
