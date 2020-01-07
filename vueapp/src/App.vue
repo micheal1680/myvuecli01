@@ -17,19 +17,22 @@
       <el-menu-item index="1">发现音乐</el-menu-item>
       <el-menu-item index="2">我的音乐</el-menu-item>
       <el-menu-item index="4">
-        <el-autocomplete
-          v-model="state"
-          :fetch-suggestions="querySearchAsync"
-          placeholder="音乐/视频/电台/用户"
-          @select="handleSelectjr"
-        ></el-autocomplete>
+        <el-select v-model="keyWord" filterable placeholder="请输入内容">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+            @keyup.enter="handleSearch"
+          ></el-option>
+        </el-select>
       </el-menu-item>
       <el-menu-item index="5">商城</el-menu-item>
       <el-submenu index="3">
         <template slot="title">个人中心</template>
         <el-menu-item index="3-1">我的主页</el-menu-item>
         <el-menu-item index="3-2">个人设置</el-menu-item>
-        <el-menu-item index="3-3">退出</el-menu-item>
+        <el-menu-item index="3-3" @click="tuichu">退出</el-menu-item>
       </el-submenu>
     </el-menu>
     <!-- <test-footer></test-footer> -->
@@ -47,10 +50,34 @@
 export default {
   data() {
     return {
+      keyWord: "",
       activeIndex: "1",
       restaurants: [],
+      value: "",
       state: "",
-      timeout: null
+      timeout: null,
+      options: [
+        // {
+        //   value: "选项1",
+        //   label: "阿黛尔"
+        // },
+        // {
+        //   value: "选项2",
+        //   label: "碧昂丝"
+        // },
+        // {
+        //   value: "选项3",
+        //   label: "亚瑟小子"
+        // },
+        // {
+        //   value: "选项4",
+        //   label: "周杰伦"
+        // },
+        // {
+        //   value: "选项5",
+        //   label: "邓紫棋"
+        // }
+      ]
     };
   },
   // components:{
@@ -64,7 +91,9 @@ export default {
           this.$route.path == "/" ? "" : this.$router.push("/");
           break;
         case "2":
-          this.$route.path == "/my" ? "" : this.$router.push("/my");
+          this.$route.path == "/musicPage"
+            ? ""
+            : this.$router.push("/musicPage");
           break;
         case "3":
           this.$route.path == "/info" ? "" : this.$router.push("/info");
@@ -82,12 +111,27 @@ export default {
           this.$route.path == "/product" ? "" : this.$router.push("/product");
       }
     },
+    handleSearch(data) {
+      this.getMusic(data);
+    },
+    getMusic(data) {
+      (data = data ? data : ""),
+        axios
+          .get("http://localhost:8888/getMusic", {
+            params: {
+              keyWord: data
+            }
+          })
+          .then(res => {
+            this.options = res.data;
+          });
+    },
     setActiveIndex() {
       switch (this.$route.path) {
         case "/":
           this.activeIndex = "1";
           break;
-        case "/my":
+        case "/musicPage":
           this.activeIndex = "2";
           break;
         case "/info":
@@ -99,7 +143,7 @@ export default {
         case "/setting":
           this.activeIndex = "3-2";
           break;
-        // case "/out":
+        // case "/":
         //   this.activeIndex = "3-3";
         //   break;
         case "/product":
@@ -107,29 +151,34 @@ export default {
           break;
       }
     },
+    tuichu() {
+      // 点击"退出"，清除本地缓存中的登录状态，即退出登录
+      localStorage.clear("loginStatus");
+    },
     loadAll() {
       return;
     },
-    querySearchAsync(queryString, cb) {
+    querySearch(queryString, cb) {
       var restaurants = this.restaurants;
       var results = queryString
-        ? restaurants.filter(this.createStateFilter(queryString))
+        ? restaurants.filter(this.createFilter(queryString))
         : restaurants;
-
-      clearTimeout(this.timeout);
-      this.timeout = setTimeout(() => {
-        cb(results);
-      }, 3000 * Math.random());
+      // 调用 callback 返回建议列表的数据
+      cb(results);
     },
-    createStateFilter(queryString) {
-      return state => {
+    createFilter(queryString) {
+      return restaurant => {
         return (
-          state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
+          0
         );
       };
     },
     handleSelectjr(item) {
       console.log(item);
+    },
+    handleIconClick(ev) {
+      console.log(ev);
     }
   },
   watch: {
@@ -172,5 +221,24 @@ img {
   position: absolute;
   bottom: 0;
   left: 0;
+}
+.my-autocomplete {
+  li {
+    line-height: normal;
+    padding: 7px;
+
+    .name {
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .addr {
+      font-size: 12px;
+      color: #b4b4b4;
+    }
+
+    .highlighted .addr {
+      color: #ddd;
+    }
+  }
 }
 </style>

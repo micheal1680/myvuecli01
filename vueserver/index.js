@@ -121,7 +121,10 @@ app.post("/register", (req, res) => {
 
 })
 
+
+//获取所有音乐列表
 app.get("/getAllmusic", function (req, res) {
+
 	var sql = "select * from allmusic where 1 ";
 	mydb.query(sql, function (err, result) {
 		if (err) {
@@ -132,7 +135,10 @@ app.get("/getAllmusic", function (req, res) {
 	})
 })
 
+
+//获取热门推荐音乐列表（用的是所有音乐的前8条数据）
 app.get("/getHotmusic", function (req, res) {
+
 	let sql = "select * from allmusic limit 8";
 	mydb.query(sql, function (err, result) {
 		if (err) {
@@ -143,20 +149,20 @@ app.get("/getHotmusic", function (req, res) {
 	})
 })
 
-app.get("/getInterView", function (req, res) {
-	var sql = "select * from questions where 1 ";
 
-	if (req.query.title) {
-		sql += `and title like '%${req.query.title}%'`
-	}
+app.get("/getSingerList", function (req, res) {
+	let sql = "select * from singer limit 10";
 	mydb.query(sql, function (err, result) {
 		if (err) {
 			console.log(err); return;
+		} else {
+			res.json(result)
+
 		}
-		res.json(result)
 	})
 
 })
+
 
 
 // 商品展示
@@ -180,7 +186,6 @@ app.get("/getproducts", function (req, res) {
 		// console.log(sql,result)
 		res.json(result)
 	})
-
 }),
 	// 获取单个产品详情
 	app.get("/productDetails", function (req, res) {
@@ -199,7 +204,7 @@ app.get("/getproducts", function (req, res) {
 							// console.log(description)
 
 							res.send({
-								
+
 								description: description,
 								data: data,
 								result: result
@@ -208,25 +213,84 @@ app.get("/getproducts", function (req, res) {
 						})
 
 					}
-
-					// res.send({
-					// 	data:data,
-					// 	result:result
-
-					// })
-
 				})
 			}
-
-			else {
-				res.send({ data: "没有详情页面" })
-
-			}
-
 		})
-
+	}),
+	app.post("/myset", (req, res) => {
+		console.log(123)
+		var sql = `select * from setting where nickname='${req.body.nickname}'`;
+		mydb.query(sql, (err, result) => {
+			console.log(result);
+			if (!result.length) {
+				var sql = `insert into setting (nickname,description,sex,birth,location) values ('${req.body.nickname}','${req.body.description}','${req.body.sex}','${req.body.birth}','${req.body.location}')`;
+				mydb.query(sql, (err, result) => {
+					console.log(result)
+					if (result.affectedRows) {
+						res.send({
+							code: 0,
+							msg: "保存成功"
+						})
+					}
+				})
+			} else {
+				res.send({
+					code: -1,
+					msg: "该昵称已存在"
+				})
+			}
+		})
 	})
-
+// 搜索获取音乐
+app.get("/getMusic", function (req, res) {
+	var sql = "select * from mylike where 1 "
+	if (req.query.keyWord) {
+		sql += `and title like '%${req.query.keyWord}%'`
+	}
+	sql += " limit 2";
+	mydb.query(sql, function (err, result) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		console.log(sql, result);
+		res.json(result)
+	})
+})
+app.get("/favoritelist", (req, res) => {
+	var sql = `select * from mylike`;
+	mydb.query(sql, function (err, result) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		console.log(sql, result);
+		res.json(result)
+	})
+})
+app.post("/updateset", (req, res) => {
+	var sql = `select * from setting where nickname='${req.body.nickname}'`;
+	mydb.query(sql, (err, result) => {
+		console.log(result);
+		if (!result.length) {
+			var sql = `update setting set nickname='${req.body.nickname}',description='${req.body.description}',sex='${req.body.sex}',birth='${req.body.birth}',location='${req.body.location}' where user_id=4`;
+			mydb.query(sql, (err, result) => {
+				console.log(result)
+				if (result.affectedRows) {
+					res.send({
+						code: 0,
+						msg: "修改成功"
+					})
+				}
+			})
+		} else {
+			res.send({
+				code: -1,
+				msg: "该昵称已存在"
+			})
+		}
+	})
+})
 
 //cnpm i --save multer
 //const multer=require("multer")
