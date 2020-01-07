@@ -15,7 +15,7 @@ import rockMusic from "../components/musicType/rock.vue";
 import balladMusic from "../components/musicType/ballad.vue";
 import electronicMusic from "../components/musicType/electronic.vue";
 import moreMusic from "../components/musicType/more.vue";
-import list from  "../components/list.vue";
+import list from "../components/list.vue";
 
 
 import productDetails from "../components/productDetails.vue"
@@ -23,11 +23,16 @@ import productDetails from "../components/productDetails.vue"
 import favorite from "../components/favorite.vue";
 
 import downloadclient from "../views/downloadclient.vue";
+import shopcar from "../components/shopcar.vue"
 
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path:"/shopcar",
+    component:shopcar
+  },
   {
     path: '/',
     name: 'home',
@@ -63,7 +68,7 @@ const routes = [
         component: moreMusic
       }
     ]
-  },  
+  },
   {
     path: '/downloadclient',
     component: downloadclient
@@ -77,25 +82,25 @@ const routes = [
     path: '/musicPage',
     name: 'musicPage',
     component: () => import('../components/musicPage.vue'),
-    children:[
+    children: [
       {
         path: 'favorite',
-        component: favorite
+        component: favorite,
       },
       {
         path: 'list',
         component: list
       },
     ],
-    beforeEach(to,from,next){
-      if(localStorage.getItem("loginStatus")){
+    beforeEach(to, from, next) {
+      if (localStorage.getItem("loginStatus")) {
         next()
-      }else{
+      } else {
         next("/my")
       }
     },
-    meta:{
-      keeplive:false
+    meta: {
+      keeplive: false
     }
   },
   {
@@ -109,7 +114,24 @@ const routes = [
   },
   {
     path: '/setting',
-    component: setting
+    component: setting,
+    meta: {
+      keepAlive: true,
+      firstEnter: true
+    },
+    beforeEnter(to, from, next) {
+      if (from.path == "/") {
+        if (to.meta.firstEnter) {
+          to.meta.keepAlive = true
+          to.meta.keepAlive == false
+        } else {
+          to.meta.keepAlive = false
+        }
+      } else {
+        to.meta.keepAlive = true
+      }
+      next();
+    }
   },
   {
     path: '/register',
@@ -122,11 +144,12 @@ const routes = [
   {
     path: '/product',
     component: product,
-   
+
   },
-  {path:"/productDetails",
-      component:productDetails
-    }
+  {
+    path: "/productDetails",
+    component: productDetails
+  }
 ]
 
 const router = new VueRouter({
@@ -136,15 +159,15 @@ const router = new VueRouter({
 })
 
 // 全局导航守卫
-router.beforeEach(function(to,from,next){
-  console.log(to,from)
-  if(to.path=="/musicPage"){
-    if(localStorage.getItem("loginStatus")){
+router.beforeEach(function (to, from, next) {
+  console.log(to, from)
+  if (to.path == "/musicPage") {
+    if (localStorage.getItem("loginStatus")) {
       next()
-    }else{
+    } else {
       next("/my");
     }
-  }else{
+  } else {
     next()
   }
 })
