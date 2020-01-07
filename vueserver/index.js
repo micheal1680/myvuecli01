@@ -285,7 +285,7 @@ app.post("/updateset", (req, res) => {
 	var sql = `select * from setting where nickname='${req.body.nickname}'`;
 	mydb.query(sql, (err, result) => {
 		console.log(result);
-		if (!result.length) {
+		if (!result.length) {gi
 			var sql = `update setting set nickname='${req.body.nickname}',description='${req.body.description}',sex='${req.body.sex}',birth='${req.body.birth}',location='${req.body.location}' where user_id=4`;
 			mydb.query(sql, (err, result) => {
 				console.log(result)
