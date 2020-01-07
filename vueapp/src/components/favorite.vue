@@ -2,12 +2,13 @@
   <footer>
     <el-container>
       <el-main>
-        <el-table :data="tableData">
+       <el-table>
           <el-table-column prop="title" label="歌曲标题" width="140"></el-table-column>
           <el-table-column prop="time" label="时长" width="120"></el-table-column>
           <el-table-column prop="name" label="歌手"></el-table-column>
           <el-table-column prop="cd" label="专辑"></el-table-column>
         </el-table>
+        <div v-for="(item,index) in tableData" :key="index">{{item.title}}{{item.time}}{{item.name}}{{item.cd}}</div>
       </el-main>
       <hr />
     <el-footer style="background-color:white;padding:0">
@@ -23,22 +24,25 @@
 </template>
 
 <script>
+import axios from "axios"
 import command from "../components/comand.vue"
 export default {
   data() {
-    const item = {
-      title: "Hello",
-      time: "04:48",
-      name: "Adele",
-      cd:"25"
-    };
     return {
-      tableData: Array(20).fill(item)
+      tableData: [],
     };
   },
   components:{
     command:command
+  },
+  created(){
+    axios.get("/favoritelist").then(res=>{
+      this.tableData=res.data
+      console.log( this.tableData)
+      console.log(this.tableData[0].title)
+    })
   }
+
 };
 </script>
 

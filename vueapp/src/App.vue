@@ -17,27 +17,15 @@
       <el-menu-item index="1">发现音乐</el-menu-item>
       <el-menu-item index="2">我的音乐</el-menu-item>
       <el-menu-item index="4">
-        <!-- <el-autocomplete
-          v-model="state"
-          :fetch-suggestions="querySearchAsync"
-          placeholder="音乐/视频/电台/用户"
-          @select="handleSelectjr"
-          @keyup.enter="handleSearch"
-        ></el-autocomplete>-->
-        <el-autocomplete
-          popper-class="my-autocomplete"
-          v-model="state"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入内容"
-          @select="handleSelectjr"
-          @keyup.enter="handleSearch"
-        >
-          <i class="el-icon-edit el-input__icon" slot="suffix" @click="handleIconClick"></i>
-          <template slot-scope="{ item }">
-            <div class="name">{{ item.value }}</div>
-            <span class="addr">{{ item.address }}</span>
-          </template>
-        </el-autocomplete>
+        <el-select v-model="keyWord" filterable placeholder="请输入内容">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+            @keyup.enter="handleSearch"
+          ></el-option>
+        </el-select>
       </el-menu-item>
       <el-menu-item index="5">商城</el-menu-item>
       <el-submenu index="3">
@@ -62,10 +50,34 @@
 export default {
   data() {
     return {
+      keyWord: "",
       activeIndex: "1",
       restaurants: [],
+      value: "",
       state: "",
-      timeout: null
+      timeout: null,
+      options: [
+        // {
+        //   value: "选项1",
+        //   label: "阿黛尔"
+        // },
+        // {
+        //   value: "选项2",
+        //   label: "碧昂丝"
+        // },
+        // {
+        //   value: "选项3",
+        //   label: "亚瑟小子"
+        // },
+        // {
+        //   value: "选项4",
+        //   label: "周杰伦"
+        // },
+        // {
+        //   value: "选项5",
+        //   label: "邓紫棋"
+        // }
+      ]
     };
   },
   // components:{
@@ -79,7 +91,9 @@ export default {
           this.$route.path == "/" ? "" : this.$router.push("/");
           break;
         case "2":
-          this.$route.path == "/musicPage" ? "" : this.$router.push("/musicPage");
+          this.$route.path == "/musicPage"
+            ? ""
+            : this.$router.push("/musicPage");
           break;
         case "3":
           this.$route.path == "/info" ? "" : this.$router.push("/info");
@@ -97,9 +111,20 @@ export default {
           this.$route.path == "/product" ? "" : this.$router.push("/product");
       }
     },
-    handleSearch: function() {
-      // myevent是自定义事件
-      this.$emit("myevent", this.state);
+    handleSearch(data) {
+      this.getMusic(data);
+    },
+    getMusic(data) {
+      (data = data ? data : ""),
+        axios
+          .get("http://localhost:8888/getMusic", {
+            params: {
+              keyWord: data
+            }
+          })
+          .then(res => {
+            this.options = res.data;
+          });
     },
     setActiveIndex() {
       switch (this.$route.path) {
@@ -126,7 +151,7 @@ export default {
           break;
       }
     },
-    tuichu(){
+    tuichu() {
       // 点击"退出"，清除本地缓存中的登录状态，即退出登录
       localStorage.clear("loginStatus");
     },
