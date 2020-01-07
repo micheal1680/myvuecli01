@@ -34,6 +34,7 @@
         <el-menu-item index="3-2">个人设置</el-menu-item>
         <el-menu-item index="3-3" @click="tuichu">退出</el-menu-item>
       </el-submenu>
+      <el-menu-item index="6">后台管理</el-menu-item>
     </el-menu>
     <!-- <test-footer></test-footer> -->
     <!-- <router-view></router-view> -->
@@ -110,6 +111,10 @@ export default {
           break;
         case "5":
           this.$route.path == "/product" ? "" : this.$router.push("/product");
+          break;
+        case "6":
+          this.$route.path == "/Backstage" ? "" : this.$router.push("/Backstage");
+          break;
       }
     },
     handleSearch(data) {
@@ -149,6 +154,9 @@ export default {
         //   break;
         case "/product":
           this.activeIndex = "5";
+          break;
+        case "/Backstage":
+          this.activeIndex = "6";
           break;
       }
     },

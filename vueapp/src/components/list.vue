@@ -1,12 +1,14 @@
 <template>
   <el-container>
     <el-main>
-      <el-table :data="tableData">
-       <el-table-column prop="title" label="歌曲标题" width="140"></el-table-column>
+      <el-table :data="tableData" style="width: 100%"
+    :default-sort = "{prop: 'date', order: 'descending'}">
+          <el-table-column prop="title" label="歌曲标题" width="140"></el-table-column>
           <el-table-column prop="time" label="时长" width="120"></el-table-column>
           <el-table-column prop="name" label="歌手"></el-table-column>
           <el-table-column prop="cd" label="专辑"></el-table-column>
-      </el-table>
+          <el-table-column prop="music_url" label="歌曲地址"></el-table-column>
+        </el-table>
     </el-main>
     <hr />
     <el-footer style="background-color:white;padding:0">
@@ -23,19 +25,20 @@
 <script>
 import command from "../components/comand.vue"
 export default {
-  data() {
-    const item = {
-      title: "dangerous",
-      time: "04:48",
-      name: "Micheal jackson",
-      cd:"dangerous"
-    };
+   data() {
     return {
-      tableData: Array(20).fill(item)
+      tableData: [],
     };
   },
   components:{
     command:command
+  },
+  created(){
+    this.axios.get("/yearlist").then(result=>{
+      this.tableData=result.data
+      console.log( this.tableData)
+      console.log(this.tableData[0].title)
+    })
   }
 };
 </script>
