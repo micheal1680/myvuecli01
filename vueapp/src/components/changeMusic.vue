@@ -45,7 +45,7 @@
       <div class="layui-body">
         <!-- 内容主体区域 -->
         <div style="padding: 15px;">
-          <h2>添加商品</h2>
+          <h2>修改商品</h2>
           <hr />
           <form class="layui-form" action>
             <div class="layui-form-item">

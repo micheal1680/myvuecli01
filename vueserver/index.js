@@ -281,6 +281,18 @@ app.get("/yearlist",(req,res)=>{
         res.json(result)
     })
 })
+// 后台音乐列表
+app.get("/bacstagelist",(req,res)=>{
+	var sql=`select * from bacstagelist`;
+	mydb.query(sql,function(err,result){
+        if(err){
+            console.log(err);
+            return;
+        }
+        console.log(sql,result);
+        res.json(result)
+    })
+})
 app.post("/updateset", (req, res) => {
 	var sql = `select * from setting where nickname='${req.body.nickname}'`;
 	mydb.query(sql, (err, result) => {

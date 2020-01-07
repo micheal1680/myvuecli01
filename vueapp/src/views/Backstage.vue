@@ -48,12 +48,12 @@
           <h2>商品管理</h2>
           <hr />
           <el-table :data="tableData" style="width: 100%">
-            <el-table-column  prop="name" label="歌手" width="180">
+            <el-table-column  prop="name" label="歌手" width="160">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.name }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="title" label="歌名" width="180">
+            <el-table-column prop="title" label="歌名" width="160">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.title }}</span>
               </template>
@@ -64,16 +64,22 @@
                 <span style="margin-left: 10px">{{ scope.row.time }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="music_url" label="音乐地址" width="180">
+            <el-table-column prop="music_url" label="音乐地址" width="200">
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.music_url }}</span>
+                <!-- <span style="margin-left: 10px">{{ scope.row.music_url }}</span> -->
+                 <el-popover trigger="hover" placement="top">
+                  <p>点击量: {{ scope.row.clicks1 }}</p>
+                  <div slot="reference" class="name-wrapper">
+                    <el-tag size="medium">{{ scope.row.music_url }}</el-tag>
+                  </div>
+                </el-popover>
               </template>
             </el-table-column>
-            <el-table-column prop="vidio_url" label="MV地址" width="180">
+            <el-table-column prop="vidio_url" label="MV地址" width="200">
               <template slot-scope="scope">
                 <el-popover trigger="hover" placement="top">
-                  <p>MV地址: {{ scope.row.vidio_url }}</p>
-                  <p>点击量: {{ scope.row.clicks }}</p>
+                  <!-- <p>MV地址: {{ scope.row.vidio_url }}</p> -->
+                  <p>点击量: {{ scope.row.clicks2 }}</p>
                   <div slot="reference" class="name-wrapper">
                     <el-tag size="medium">{{ scope.row.vidio_url }}</el-tag>
                   </div>
@@ -119,6 +125,7 @@ export default {
   methods: {
     handleEdit(index, row) {
         console.log(index, row);
+        this.$router.push({path:"/changeMusic"})
       },
     handleDelete(index, row) {
         console.log(index, row);
