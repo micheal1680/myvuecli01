@@ -48,19 +48,34 @@
           <h2>商品管理</h2>
           <hr />
           <el-table :data="tableData" style="width: 100%">
-            <el-table-column label="日期" width="180">
+            <el-table-column  prop="name" label="歌手" width="180">
               <template slot-scope="scope">
-                <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                <span style="margin-left: 10px">{{ scope.row.name }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="姓名" width="180">
+            <el-table-column prop="title" label="歌名" width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.title }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column  prop="time" label="时长" width="180">
+              <template slot-scope="scope">
+                <i class="el-icon-time"></i>
+                <span style="margin-left: 10px">{{ scope.row.time }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="music_url" label="音乐地址" width="180">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.music_url }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="vidio_url" label="MV地址" width="180">
               <template slot-scope="scope">
                 <el-popover trigger="hover" placement="top">
-                  <p>姓名: {{ scope.row.name }}</p>
-                  <p>住址: {{ scope.row.address }}</p>
+                  <p>MV地址: {{ scope.row.vidio_url }}</p>
+                  <p>点击量: {{ scope.row.clicks }}</p>
                   <div slot="reference" class="name-wrapper">
-                    <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                    <el-tag size="medium">{{ scope.row.vidio_url }}</el-tag>
                   </div>
                 </el-popover>
               </template>
@@ -91,27 +106,15 @@
 export default {
   data:function(){
     return {
-      tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
+      tableData: []
     }
   },
   created() {
-    this.gettable();
+    this.axios.get("/bacstagelist").then(result=>{
+      this.tableData=result.data
+      console.log( this.tableData)
+      console.log(this.tableData[0].title)
+    })
   },
   methods: {
     handleEdit(index, row) {
