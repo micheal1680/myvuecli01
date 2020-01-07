@@ -2,6 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Info from '../views/info.vue'
+import Backstage from '../views/Backstage.vue'
+import AddMusic from '../components/AddMusic.vue'
+import changeMusic from '../components/changeMusic.vue'
 import mymain from "../components/mymain.vue"
 import setting from "../components/setting.vue"
 import register from "../components/register.vue";
@@ -102,6 +105,25 @@ const routes = [
     path: '/info',
     name: 'info',
     component: Info
+  },
+  // 后台管理
+  // 商品管理
+  {
+    path: '/Backstage',
+    name: 'Backstage',
+    component: Backstage
+  },
+  // 添加商品
+  {
+    path: '/AddMusic',
+    name: 'AddMusic',
+    component: AddMusic
+  },
+  // 修改商品
+  {
+    path: '/changeMusic',
+    name: 'changeMusic',
+    component: changeMusic
   },
   {
     path: '/mymain',

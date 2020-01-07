@@ -217,8 +217,21 @@ app.get("/getMusic",function(req,res){
         res.json(result)
     })
 })
+// 我喜欢的歌曲
 app.get("/favoritelist",(req,res)=>{
 	var sql=`select * from mylike`;
+	mydb.query(sql,function(err,result){
+        if(err){
+            console.log(err);
+            return;
+        }
+        console.log(sql,result);
+        res.json(result)
+    })
+})
+// 我的年度歌单
+app.get("/yearlist",(req,res)=>{
+	var sql=`select * from yearlist`;
 	mydb.query(sql,function(err,result){
         if(err){
             console.log(err);
