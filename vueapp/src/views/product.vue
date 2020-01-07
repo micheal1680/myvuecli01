@@ -11,7 +11,9 @@
             <input type="text" placeholder="请输入搜索内容" v-model="input2" @keyup.enter="serachproduct" />
           </div>
 
-          <div>购物车</div>
+          <div @click="tocarpage" style="display:flex">购物车
+            
+            <div class="gouwuche">{{this.$store.getters.getallcount}}</div></div>
           <div>
             <el-menu
               :default-active="activeIndex2"
@@ -189,12 +191,15 @@ export default {
      
       
     },
+    tocarpage(){
+      this.$router.push("/shopcar")
+    }
 
   },
 
   created() {
     this.axios.get("/getproducts").then(result => {
-      console.log(result);
+      // console.log(result);
       this.pruducthot = result.data;
     });
   }
@@ -202,6 +207,17 @@ export default {
 </script>
 
 <style scoped>
+.gouwuche{
+  height: 20px;
+  width: 20px;
+  background-color: red;
+  color: white;
+  border-radius: 10px;
+  line-height: 20px;
+  margin-left: -100px;
+  padding: 0px;
+}
+
 .el-header{
   /* background-color: #b3c0d1; */
   color: #333;

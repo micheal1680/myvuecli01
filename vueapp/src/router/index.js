@@ -26,11 +26,16 @@ import productDetails from "../components/productDetails.vue"
 import favorite from "../components/favorite.vue";
 
 import downloadclient from "../views/downloadclient.vue";
+import shopcar from "../components/shopcar.vue"
 
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path:"/shopcar",
+    component:shopcar
+  },
   {
     path: '/',
     name: 'home',
