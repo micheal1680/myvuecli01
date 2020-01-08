@@ -51,7 +51,7 @@
                 :isPlay="false"
                 @click="playMusic(index,$event)"
               >
-                <img class="cover" :src="item.picture_url" alt />
+                <img class="cover" :src="item.picture_url" @click="toSingleSong" alt />
                 <!-- <audio class="audio" :src="item.music_url" controls="controls" :isPlay="false"></audio> -->
                 <audio class="audio hot-audio" controls="controls" :src="item.music_url"></audio>
               </div>
@@ -70,8 +70,7 @@
             <!-- 新碟上架列表 -->
             <div class="hot-song-cover">
               <div class="single-song-cover" v-for="(item,index) in hotMusicCover" :key="index">
-                <img :src="item.picture_url" alt />
-
+                <img :src="item.picture_url" @click="toSingleSong" alt />
                 <audio class="audio" :src="item.music_url" controls="controls"></audio>
               </div>
             </div>
@@ -131,7 +130,7 @@
     </div>
 
     <!-- 底部音乐播放控制器 -->
-    <musicplay></musicplay>
+    <musicPlay></musicPlay>
     <router-view></router-view>
     <!-- 底部信息 -->
     <div></div>
@@ -142,7 +141,8 @@
 // @ is an alias to /src
 import Bus from "../bus/Bus.js"
 import axios from "axios";
-import musicplay from "../components/musicplay.vue"
+import musicPlay from "../components/musicPlay.vue"
+import singleSong from "../components/singleSong.vue"
 import lunbotu1 from "../assets/Home-images/lunbotu/01.jpg";
 import lunbotu2 from "../assets/Home-images/lunbotu/02.jpg";
 import lunbotu3 from "../assets/Home-images/lunbotu/03.jpg";
@@ -184,7 +184,7 @@ export default {
     };
   },
   components: {
-    "musicplay": musicplay
+    "musicPlay": musicPlay
   },
   created() {
     console.log("---进入created---");   
@@ -316,6 +316,16 @@ export default {
         console.log(this.isPlay);
       }
       console.log(index);
+    },
+    // 根据点击歌曲封面的不同进入不同单曲页面
+    toSingleSong(){
+      // let songId = 
+      this.$router.push({
+        path: "/singlesong",
+        query: {
+          id: 1
+        }
+      })
     }
   }
 };
