@@ -192,7 +192,13 @@ export default {
       
     },
     tocarpage(){
-      this.$router.push("/shopcar")
+      
+      if(localStorage.getItem("username")){
+        this.$router.push("/shopcar")
+      }else{
+        this.$router.push("/login")
+      }
+      
     }
 
   },
