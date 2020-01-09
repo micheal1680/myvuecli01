@@ -29,7 +29,37 @@ export default new Vuex.Store({
       localStorage.setItem('car', JSON.stringify(state.car) );
       
 
+    },
+    removeall(state){
+      // console.log(state.car)
+      state.car=[]
+      localStorage.setItem('car', JSON.stringify(state.car) );
+    },
+    removeone(state,goodsinfo){
+      state.car.some((item) => {
+        if (item.id == goodsinfo.id) {
+          state.car.splice(goodsinfo.index, 1);
+          console.log(state.car)
+          return true
+        }
+      })
+
+      localStorage.setItem('car', JSON.stringify(state.car) );
     }
+    ,
+    jiancar(state,goodsinfo){
+      // console.log(state.car)
+      state.car.some((item) => {
+        if (item.id == goodsinfo.id) {
+          item.count -= parseInt(goodsinfo.count);
+          
+          return true
+        }
+      })
+      localStorage.setItem('car', JSON.stringify(state.car) );
+    }
+
+
   },
   getters: {
     // 获取所有数量

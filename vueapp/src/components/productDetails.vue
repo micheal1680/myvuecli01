@@ -7,13 +7,16 @@
     <div class="pro">
       <div class="box">
         <div class="datu">
-          
-          <img :src="datu" alt="" >
+          <img :src="datu" alt />
         </div>
         <div v-for="(item,index) in prodet" :key="index" class="boximg">
-          <div v-for="(item1,index) in item" :key="index=item1" class="boximg1" @click="selectid(index)" >
-            <img :src="item1" alt/>
-           
+          <div
+            v-for="(item1,index) in item"
+            :key="index=item1"
+            class="boximg1"
+            @click="selectid(index)"
+          >
+            <img :src="item1" alt />
           </div>
 
           <!-- <img :src="item" alt=""> -->
@@ -55,7 +58,14 @@
         </div>
         <div>
           数量：
-          <el-input-number v-model="num" @change="handleChange" :min="1" :max="10" label="描述文字" style="width:150px "></el-input-number>
+          <el-input-number
+            v-model="num"
+            @change="handleChange"
+            :min="1"
+            :max="10"
+            label="描述文字"
+            style="width:150px "
+          ></el-input-number>
         </div>
         <div style="display:flex ">
           服务：
@@ -66,7 +76,7 @@
           </ul>
         </div>
         <div>
-          <button class="button1">立即购买</button>
+          <button class="button1" @click="buy">立即购买</button>
           <button class="button2" @click="tocar">加入购物车</button>
           <div>{{this.$store.getters.getallcount}}</div>
         </div>
@@ -80,9 +90,9 @@
           正品低价 品质保证
           该产品一经拆封，非质量问题不接受7天无理由退换货。由于产品与皮肤接触，请您确认需求后再拆封使用。
         </span>
-        <div v-for="(item,index) in description" :key="index" >
-          <div v-for="(item1,index) in item" :key="index" >
-            <img :src="item1" alt=""/>
+        <div v-for="(item,index) in description" :key="index">
+          <div v-for="(item1,index) in item" :key="index">
+            <img :src="item1" alt />
           </div>
 
           <!-- <img :src="item" alt=""> -->
@@ -98,30 +108,44 @@ export default {
     return {
       prodet: [],
       prodet1: [],
-      description:[],
+      description: [],
       num: 1,
-      datu:""
+      datu: ""
     };
   },
   methods: {
     handleChange(value) {
       console.log(value);
     },
-    selectid(a){
-     
- this.datu=a
-//  console.log(this.prodet[0].img1)
-//  console.log(this.datu)
+    selectid(a) {
+      this.datu = a;
+      //  console.log(this.prodet[0].img1)
+      //  console.log(this.datu)
     },
-    tocar(){
+    tocar() {
       // console.log("1111")
-      var goodsinfo ={id:this.prodet1[0].id, count:this.num ,name:this.prodet1[0].name ,price:this.prodet1[0].newprice,img:this.prodet1[0].picture_url,selected:true };
-      this.$store.commit("addtocar",goodsinfo)
+      var goodsinfo = {
+        id: this.prodet1[0].id,
+        count: this.num,
+        name: this.prodet1[0].name,
+        price: this.prodet1[0].newprice,
+        img: this.prodet1[0].picture_url,
+        selected: true
+      };
+      this.$store.commit("addtocar", goodsinfo);
+    },
+    buy() {
+      alert(
+        
+        <html>
+          <div>
+            <h2>购买</h2>
+          </div>
+        </html>
+      );
     }
   },
   created() {
-    
-     
     let id = this.$route.query.id;
     this.axios
       .get("/productDetails", {
@@ -135,17 +159,17 @@ export default {
         // console.log(result)
         this.prodet = result.data.data;
         // console.log(this.prodet)
-        this.datu=this.prodet[0].img1
+        this.datu = this.prodet[0].img1;
         this.prodet1 = result.data.result;
         // console.log(this.prodet1);
-        this.description=result.data.description
+        this.description = result.data.description;
       });
   }
 };
 </script>
 
-<style  scoped="scoped"> 
-.datu img{
+<style  scoped="scoped">
+.datu img {
   width: 100%;
   height: 100%;
 }
@@ -227,7 +251,7 @@ export default {
 .datu {
   width: 400px;
   height: 320px;
-  background-color:  #f9f9f9;;
+  background-color: #f9f9f9;
 }
 .boximg {
   display: flex;
