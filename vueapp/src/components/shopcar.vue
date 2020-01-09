@@ -3,8 +3,8 @@
     <h2>购物车</h2>
     <hr />
     <div class="container" id="app">
-      <div class="panel panel-default">
-        <table class="table table-bordered text-center" v-if="arr.length != 0">
+      <div class="panel ">
+        <table class="table " v-if="list.length != 0">
           <tr>
             <th>ID</th>
             <th>商品图片</th>
@@ -91,12 +91,7 @@ export default {
       list: this.$store.getters.comingcar,
       totalPrice: 0,
       nowIndex: -10,
-      arr: [
-        { id: "Fn001", name: "iOS", price: 100, amount: 2 },
-        { id: "Fn002", name: "HTML", price: 20, amount: 1 },
-        { id: "Fn003", name: "JS", price: 30, amount: 20 },
-        { id: "Fn004", name: "Vue", price: 80, amount: 32 }
-      ],
+      
       message: "",
       layer: -1
     };
@@ -125,28 +120,36 @@ export default {
     removeM(index_p) {
       this.layer = 0;
       if (index_p < 0) {
-        this.list.splice(0, this.list.length);
+        // this.list.splice(0, this.list.length);
         // console.log(this.list);
-        this.list = [];
+        this.$store.commit("removeall")
+        // this.list = [];
       } else {
         // console.log(this.list);
         // console.log(index_p);
-
-        this.list.splice(index_p, 1);
+        var goodsinfo ={id:this.list[index_p].id, index:index_p};
+        this.$store.commit("removeone",goodsinfo)
+        // this.list.splice(index_p, 1);
       }
       this.clac();
     },
     add: function(index_p) {
-      this.list[index_p].count++;
+      // this.list[index_p].count++;
+      var goodsinfo ={id:this.list[index_p].id, count:1};
+      this.$store.commit("addtocar",goodsinfo)
       this.clac();
     },
     sub: function(index_p) {
       if (this.list[index_p].count >= 1) {
-        this.list[index_p].count--;
+        // this.list[index_p].count--;
+         var goodsinfo ={id:this.list[index_p].id, count:1};
+         this.$store.commit("jiancar",goodsinfo)
         this.clac();
       } else {
         if (confirm("您确定删除这件商品吗?")) {
-          this.list.splice(index_p, 1);
+          var goodsinfo ={id:this.list[index_p].id, index:index_p};
+        this.$store.commit("removeone",goodsinfo)
+          // this.list.splice(index_p, 1);
         }
       }
     },
@@ -168,5 +171,38 @@ export default {
   z-index: 1000;
   top: 100px ;
  right: 700px;
+}
+.panel{
+  width: 80%;
+  margin: 0 auto;
+  /* background-color: red; */
+}
+.table{
+  width: 100%;
+  border: 1px solid red;
+  background-color:gainsboro;
+}
+.table tr ,.table td {
+  border: 1px solid red;
+
+
+}
+.table tr{
+  height:80px;
+}
+.table tr img{
+  height: 120px;
+  width: 120px;
+}
+.table tr button{
+  background-color: red;
+  color: white;
+  height: 30px;
+  width: 80px;
+  border: 1px solid greenyellow
+}
+.form-control{
+  text-align: center;
+  width: 100px;
 }
 </style>

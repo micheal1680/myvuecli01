@@ -50,11 +50,11 @@
                   v-for="(item,index) in hotMusicCover"
                   :key="index"
                   :isPlay="false"
-                  @click="playMusic(index,$event)"
                 >
-                  <img class="cover" :src="item.picture_url" alt />
+                  <img class="cover" :src="item.picture_url" @click="toSingleSong(index,$event)" alt />
+                  <i class="iconfont icon-bofang" @click="playMusic(index,$event)"></i>
                   <!-- <audio class="audio" :src="item.music_url" controls="controls" :isPlay="false"></audio> -->
-                  <audio class="audio hot-audio" controls="controls" :src="item.music_url"></audio>
+                  <audio class="audio hot-audio" :src="item.music_url" :current="0"></audio>
                 </div>
               </div>
 
@@ -71,9 +71,9 @@
               <!-- 新碟上架列表 -->
               <div class="hot-song-cover">
                 <div class="single-song-cover" v-for="(item,index) in hotMusicCover" :key="index">
-                  <img :src="item.picture_url" alt />
-
-                  <audio class="audio" :src="item.music_url" controls="controls"></audio>
+                  <i class="iconfont icon-bofang" @click="playMusic(index,$event)"></i>
+                  <img :src="item.picture_url" @click="toSingleSong(index,$event)" alt />
+                  <audio class="audio" :src="item.music_url"></audio>
                 </div>
               </div>
 
@@ -93,27 +93,9 @@
             <!-- 右侧main -->
             <el-main class="home-main">
               <!-- 登录 -->
-              <div class="home-login">
-                <p>登录网易云音乐，可以享受无限收藏的乐趣，并且无限同步到手机</p>
-                <el-button class="home-login-button" type="primary" @click="homeLogin">用户登录</el-button>
-              </div>
-
-              <!-- 登录后显示个人信息 -->
-              <div class="home-userinfo">
-                <img :src="userPicture" alt />
-                <div>{{username}}</div>
-                <div>
-                  <p>LV.{{level}}</p>
-                  <el-row>
-                    <el-button type="primary" @click="singIn">签到</el-button>
-                  </el-row>
-                </div>
-                <div>
-                  <div>关注：{{follow}}</div>
-                  <div>粉丝：{{fans}}</div>
-                </div>
-              </div>
-
+              <homeLogin></homeLogin>
+              <router-view></router-view>
+              
               <!-- 入驻歌手 -->
               <div class="singerlist-title">
                 <div>入驻歌手</div>
@@ -201,15 +183,20 @@
         </div>
       </div>
     </div>
-    <!-- 底部信息 -->
-    <div></div>
+
+    <!-- 底部音乐播放控制器 -->
+    <musicPlay></musicPlay>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
+import Bus from "../bus/Bus.js";
 import axios from "axios";
+import musicPlay from "../components/musicPlay.vue";
+import singleSong from "../components/singleSong.vue";
+import homeLogin from "../components/homeLogin.vue"
 import lunbotu1 from "../assets/Home-images/lunbotu/01.jpg";
 import lunbotu2 from "../assets/Home-images/lunbotu/02.jpg";
 import lunbotu3 from "../assets/Home-images/lunbotu/03.jpg";
@@ -218,21 +205,20 @@ import lunbotu5 from "../assets/Home-images/lunbotu/05.jpg";
 import lunbotu6 from "../assets/Home-images/lunbotu/06.jpg";
 import lunbotu7 from "../assets/Home-images/lunbotu/07.jpg";
 import lunbotu8 from "../assets/Home-images/lunbotu/08.jpg";
-//import footer from "../components/footer.vue"  不能用footer作为组件名
 
 export default {
   name: "home",
+  // props: {
+  //   isLogin: Boolean
+  // },
   data: function() {
     return {
       activeIndex: "0",
       hotMusicCover: [],
-      userPicture: "",
-      username: "",
-      level: 0,
-      follow: 0,
-      fans: 0,
       singerList: [],
+      sing: {},
       isPlay: false,
+      current: "0",
       lunbotuArr: [
         { src: lunbotu1 },
         { src: lunbotu2 },
@@ -245,28 +231,27 @@ export default {
       ]
     };
   },
+  components: {
+    musicPlay: musicPlay,
+    homeLogin: homeLogin
+  },
   created() {
-    // var that = this;
+    console.log("---进入created---");
+
     axios.get("/getHotmusic").then(res => {
       this.hotMusicCover = res.data;
-      console.log(this.hotMusicCover);
+      
     });
     axios.get("/getSingerList").then(res => {
       this.singerList = res.data;
     });
   },
-  watch: {
-    isPlay() {}
-  },
+  
   methods: {
     downloadClient() {
       this.$router.push({ path: "/downloadclient" });
-      //回到home页面改变登录框
     },
-    homeLogin() {
-      this.$router.push({ path: "/login" });
-    },
-    singIn() {},
+
     handleSelect(key, keyPath) {
       switch (key) {
         case "1":
@@ -333,10 +318,13 @@ export default {
       this.$router.push({ path: "/allsinger" });
     },
     playMusic(index, event) {
-      let hotAudio = document.querySelectorAll(".hot-audio");
+      this.current = index;
+      console.log("被点击的current:" + this.current);
+        let hotAudio = document.querySelectorAll(".hot-audio");
       if (this.isPlay == false) {
         hotAudio[index].play();
         this.isPlay = true;
+        console.log("上一次点击的hotAudio:" + hotAudio);
         console.log(this.isPlay);
       } else {
         hotAudio[index].pause();
@@ -344,6 +332,18 @@ export default {
         console.log(this.isPlay);
       }
       console.log(index);
+    },
+    // 根据点击歌曲封面的不同进入不同单曲页面
+    toSingleSong(index,$event) {
+      let songId = this.hotMusicCover[index].id;
+      console.log("---当前点击对象---" + this.hotMusicCover)
+      // Bus.$emit("singleSongInfo",this.hotMusicCover[index])
+      this.$router.push({
+        path: "/singlesong",
+        query: {
+          id: songId
+        }
+      });
     }
   }
 };
@@ -460,6 +460,16 @@ export default {
   width: 140px;
   height: 140px;
   margin: 10px 20px;
+  .icon-bofang:before {
+    color: #cd0e15;
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    bottom: 7px;
+    border: 2px solid #cd0e15;
+    border-radius: 50%;
+    padding: 3px 3px;
+  }
 }
 .audio {
   width: 140px;
@@ -479,32 +489,7 @@ export default {
     padding: 0;
   }
 }
-.home-login {
-  width: 250px;
-  height: 130px;
-  background-color: #ececec;
-  padding: 20px;
-  .home-login-button {
-    background-color: #cd0e15;
-    border: none;
-    width: 100px;
-    height: 30px;
-    line-height: 0px;
-  }
-  p {
-    font-size: 12px;
-    line-height: 14px;
-  }
-}
 
-// 登录后个人信息状态
-.home-userinfo {
-  width: 250px;
-  height: 150px;
-  background-color: #ececec;
-  margin: 0;
-  padding: 0;
-}
 
 .singerlist {
   width: 250px;

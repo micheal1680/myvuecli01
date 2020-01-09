@@ -16,11 +16,12 @@ mydb.connect();//7、发起数据库连接
 
 var app = express();//2、创建
 //9、处理跨域
-app.use(function (req, res, next) {
-	res.setHeader("Access-Control-Allow-Origin", "*");
-	res.setHeader("Access-Control-Allow-Headers", "content-type");
+app.use(function(req,res,next){
+	res.setHeader("Access-Control-Allow-Origin","*");
+	res.setHeader("Access-Control-Allow-Headers","content-type");
 	next();
 })
+
 app.use(bodyPaser.json());//处理前端传递数据为json 格式
 app.use(bodyPaser.urlencoded({
 	extended: true	//让后端识别urlencoded ，gzip 文件格式
@@ -149,8 +150,41 @@ app.get("/getHotmusic", function (req, res) {
 	})
 })
 
+//根据点击的音乐封面获取相应的歌曲信息
+app.get("/getSinglesongInfo",(req,res)=>{
+	let sql = "select * from allmusic";
+	mydb.query(sql, function (err, result) {
+		if (err) {
+			console.log(err); return;
+		} else {
+			res.json(result)
+		}
+	})
+})
 
-app.get("/getSingerList", function (req, res) {
+//首页登录后展示用户信息，根据用户名获取头像
+app.post("/getUserPicture",function(req,res){
+	
+	let sql = "select * from user where 1 "
+	if(req.body.username){
+		sql += `and username = '${req.body.username}'`		
+	}
+	console.log(sql)
+	
+	mydb.query(sql,function(err,result){
+		if(err){
+			console.log(err)
+			return;
+		} else {
+			res.json(result)
+			console.log(result)
+			console.log(req.body.username)
+		}
+	})
+})
+
+//首页获取歌手列表
+app.get("/getSingerList",function(req,res){
 	let sql = "select * from singer limit 10";
 	mydb.query(sql, function (err, result) {
 		if (err) {
@@ -162,8 +196,6 @@ app.get("/getSingerList", function (req, res) {
 	})
 
 })
-
-
 
 // 商品展示
 app.get("/getproducts", function (req, res) {

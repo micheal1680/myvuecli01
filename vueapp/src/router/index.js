@@ -27,6 +27,7 @@ import favorite from "../components/favorite.vue";
 
 import downloadclient from "../views/downloadclient.vue";
 import shopcar from "../components/shopcar.vue"
+import singleSong from "../components/singleSong.vue"
 
 
 Vue.use(VueRouter)
@@ -71,6 +72,11 @@ const routes = [
         component: moreMusic
       }
     ]
+  },
+  {
+    path: '/singlesong',
+    name: "singlesong",
+    component: singleSong
   },
   {
     path: '/downloadclient',
