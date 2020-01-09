@@ -50,28 +50,17 @@
           <form class="layui-form" action>
             <div class="layui-form-item">
               <label class="layui-form-label">
-                商品名称
+                歌手
                 <span class="red">*</span>
               </label>
-              <div class="layui-input-block">
+              <div class="layui-input-block" prop="name">
                 <input
+                  v-model="name"
                   type="text"
                   name="name"
                   required
                   lay-verify="required"
-                  placeholder="请输入商品名称"
-                  autocomplete="off"
-                  class="layui-input"
-                />
-              </div>
-            </div>
-            <div class="layui-form-item">
-              <label class="layui-form-label">原价</label>
-              <div class="layui-input-block">
-                <input
-                  type="text"
-                  name="oldprice"
-                  placeholder="请输入原价"
+                  placeholder="请输入歌手名字"
                   autocomplete="off"
                   class="layui-input"
                 />
@@ -79,71 +68,90 @@
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">
-                现价
+                歌名
                 <span class="red">*</span>
               </label>
-              <div class="layui-input-block">
+              <div class="layui-input-block" prop="title">
                 <input
+                  v-model="title"
                   type="text"
-                  name="newprice"
+                  name="title"
                   required
                   lay-verify="required"
-                  placeholder="请输入现价"
+                  placeholder="请输入歌曲名字"
                   autocomplete="off"
                   class="layui-input"
                 />
               </div>
             </div>
-
             <div class="layui-form-item">
               <label class="layui-form-label">
-                分类
-                <span class="red">*</span> 
-              </label>
-              <div class="layui-input-block">
-                <select name="type" lay-verify="required">
-                  <option value></option>
-                  <option value="1">女士棉服</option>
-                  <option value="2">女士裤装</option>
-                  <option value="3">女士羽绒服</option>
-                  <option value="4">女士裙装</option>
-                  <option value="5">男士牛仔上衣</option>
-                  <option value="6">男士裤装</option>
-                  <option value="7">男士羽绒服</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="layui-form-item">
-              <label class="layui-form-label">库存</label>
-              <div class="layui-input-block">
-                <input
-                  type="text"
-                  name="stock"
-                  placeholder="请输入库存"
-                  autocomplete="off"
-                  class="layui-input"
-                />
-              </div>
-            </div>
-
-            <div class="layui-form-item layui-form-text">
-              <label class="layui-form-label">
-                商品描述
+                时长
                 <span class="red">*</span>
               </label>
-              <div class="layui-input-block">
-                <textarea name="description" placeholder="请输入描述" class="layui-textarea"></textarea>
+              <div class="layui-input-block" prop="time">
+                <input
+                  v-model="time"
+                  type="text"
+                  name="time"
+                  required
+                  lay-verify="required"
+                  placeholder="请输入歌曲时长"
+                  autocomplete="off"
+                  class="layui-input"
+                />
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">
+                音乐地址
+                <span class="red">*</span>
+              </label>
+              <div class="layui-input-block" prop="music_url">
+                <input
+                  v-model="music_url"
+                  type="text"
+                  name="music_url"
+                  required
+                  lay-verify="required"
+                  placeholder="请输入音乐地址"
+                  autocomplete="off"
+                  class="layui-input"
+                />
               </div>
             </div>
 
-            <button type="button" class="layui-btn mybtn-location" id="uploadPicture">
-              <i class="layui-icon">&#xe67c;</i>上传图片
-            </button>
+            <div class="layui-form-item">
+              <label class="layui-form-label">音乐播放量</label>
+              <div class="layui-input-block" prop="clicks">
+                <input
+                  v-model="clicks"
+                  type="text"
+                  name="clicks"
+                  placeholder="请输入音乐播放量"
+                  autocomplete="off"
+                  class="layui-input"
+                />
+              </div>
+            </div>
+           
+           <div class="layui-form-item">
+              <label class="layui-form-label">歌曲图片</label>
+              <div class="layui-input-block" prop="picture_url">
+                <input
+                  v-model="picture_url"
+                  type="text"
+                  name="picture_url"
+                  placeholder="请输入音乐图片地址"
+                  autocomplete="off"
+                  class="layui-input"
+                />
+              </div>
+            </div>
 
             <div class="layui-form-item">
               <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="formAdd">立即添加</button>
+                <button class="layui-btn" lay-submit type="button"  @click="addmusic">立即添加</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
               </div>
             </div>
@@ -161,50 +169,35 @@
 
 <script>
 export default {
-  created() {
-    thid.addmusic();
+  data: function() {
+    return {
+      name: "",
+      title: "",
+      time: "",
+      music_url: "",
+      clicks: "",
+      picture_url:""
+    };
   },
   methods: {
     addmusic() {
-      var form = layui.form;
-
-      var imgUrl = "";
-
-      // d调用函数得到一个Promise对象，在该Promise对象中上传了文件
-      var p = uploadFile();
-      p.then(data => {
-        //then处理resolve
-        imgUrl = data; //将resolve中返回的图片地址赋值给imgUrl变量
-      }).catch(data => {
-        //catch处理reject
-        console.log(data);
-      });
-
-      //监听提交  添加商品
-      document.querySelector(".layui-form") &&
-        form.on("submit(formAdd)", function(data) {
-          // data.field表示表单中所有元素的值，是一个json对象
-          var product = data.field;
-          console.log(JSON.stringify(product));
-
-          // 为图片存放上传回来的地址
-          product.file = imgUrl;
-
-          console.log(JSON.stringify(product));
-
-          // 发送请求添加商品
-          $.post("http://localhost:8888/music/add", product, function(data) {
-            if (data.code == 0) {
-              layer.msg("添加商品成功");
-            } else {
-              layer.msg("添加商品失败");
-            }
-            console.log(data);
-            // window.location.href = "../html/AddProduct.html";
-          });
-
-          return false;
-        });
+      this.axios.post("/add", {
+        name: this.name,
+        title: this.title,
+        time: this.time,
+        music_url: this.music_url,
+        clicks: this.clicks,
+        picture_url:this.picture_url
+      }).then(res=>{
+        if(res.data.code==0){
+          this.$message({
+            message:"添加商品成功",
+            type:'success'
+          })
+        }else{
+          this.$message.error("该歌曲已存在");
+        }
+      })
     }
   }
 };

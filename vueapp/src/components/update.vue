@@ -16,7 +16,12 @@
       </el-form-item>
       <el-form-item label="生日：">
         <el-col :span="11">
-          <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.birth" style="width: 100%;"></el-date-picker>
+          <el-date-picker
+            type="date"
+            placeholder="选择日期"
+            v-model="ruleForm.birth"
+            style="width: 100%;"
+          ></el-date-picker>
         </el-col>
       </el-form-item>
       <el-form-item label="地区：">
@@ -112,13 +117,27 @@ export default {
       }
     };
   },
+  created(){
+    // 要想一访问页面，数据就在页面上，可以在created()里面写具体展示想要数据的方法，因为created()是创建周期函数，因此一打开页面就直接先执行created函数里面的东西
+    // 获取本地缓存的登录用户名
+    var username=localStorage.getItem("username")
+    this.axios.get("/getnick",{
+      username:username
+    }).then(result=>{
+      // 将获取到的值渲染到ruleForm这个表单中。表单数据是对象，表格数据是数组
+        this.ruleForm=result.data
+    })
+
+  },
   methods: {
     submitForm(formName) {
       console.log("submit!");
+      var username=localStorage.getItem("username")
       this.$refs[formName].validate(valid => {
         if (valid) {
-         this.axios
+          this.axios
             .post("/myset", {
+              username:username,
               nickname: this.ruleForm.nickname,
               description: this.ruleForm.description,
               sex: this.ruleForm.sex,
@@ -143,10 +162,12 @@ export default {
     },
     updateForm(formName) {
       console.log("submit!");
+      var username=localStorage.getItem("username")
       this.$refs[formName].validate(valid => {
         if (valid) {
-         this.axios
+          this.axios
             .post("/updateset", {
+              username:username,
               nickname: this.ruleForm.nickname,
               description: this.ruleForm.description,
               sex: this.ruleForm.sex,

@@ -47,31 +47,20 @@
         <div style="padding: 15px;">
           <h2>修改商品</h2>
           <hr />
-          <form class="layui-form" action>
+          <form class="layui-form" action ref="ruleForm" :model="ruleForm">
             <div class="layui-form-item">
               <label class="layui-form-label">
-                商品名称
+                歌手
                 <span class="red">*</span>
               </label>
-              <div class="layui-input-block">
+              <div class="layui-input-block" prop="name">
                 <input
+                  v-model="ruleForm.name"
                   type="text"
                   name="name"
                   required
                   lay-verify="required"
-                  placeholder="请输入商品名称"
-                  autocomplete="off"
-                  class="layui-input"
-                />
-              </div>
-            </div>
-            <div class="layui-form-item">
-              <label class="layui-form-label">原价</label>
-              <div class="layui-input-block">
-                <input
-                  type="text"
-                  name="oldprice"
-                  placeholder="请输入原价"
+                  placeholder="请输入歌手名字"
                   autocomplete="off"
                   class="layui-input"
                 />
@@ -79,71 +68,90 @@
             </div>
             <div class="layui-form-item">
               <label class="layui-form-label">
-                现价
+                歌名
                 <span class="red">*</span>
               </label>
-              <div class="layui-input-block">
+              <div class="layui-input-block" prop="title">
                 <input
+                  v-model="ruleForm.title"
                   type="text"
-                  name="newprice"
+                  name="title"
                   required
                   lay-verify="required"
-                  placeholder="请输入现价"
+                  placeholder="请输入歌曲名字"
                   autocomplete="off"
                   class="layui-input"
                 />
               </div>
             </div>
-
             <div class="layui-form-item">
               <label class="layui-form-label">
-                分类
+                时长
                 <span class="red">*</span>
               </label>
-              <div class="layui-input-block">
-                <select name="type" lay-verify="required">
-                  <option value></option>
-                  <option value="1">女士棉服</option>
-                  <option value="2">女士裤装</option>
-                  <option value="3">女士羽绒服</option>
-                  <option value="4">女士裙装</option>
-                  <option value="5">男士牛仔上衣</option>
-                  <option value="6">男士裤装</option>
-                  <option value="7">男士羽绒服</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="layui-form-item">
-              <label class="layui-form-label">库存</label>
-              <div class="layui-input-block">
+              <div class="layui-input-block" prop="time">
                 <input
+                  v-model="ruleForm.time"
                   type="text"
-                  name="stock"
-                  placeholder="请输入库存"
+                  name="time"
+                  required
+                  lay-verify="required"
+                  placeholder="请输入歌曲时长"
+                  autocomplete="off"
+                  class="layui-input"
+                />
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">
+                音乐地址
+                <span class="red">*</span>
+              </label>
+              <div class="layui-input-block" prop="music_url">
+                <input
+                  v-model="ruleForm.music_url"
+                  type="text"
+                  name="music_url"
+                  required
+                  lay-verify="required"
+                  placeholder="请输入音乐地址"
                   autocomplete="off"
                   class="layui-input"
                 />
               </div>
             </div>
 
-            <div class="layui-form-item layui-form-text">
-              <label class="layui-form-label">
-                商品描述
-                <span class="red">*</span>
-              </label>
-              <div class="layui-input-block">
-                <textarea name="description" placeholder="请输入描述" class="layui-textarea"></textarea>
+            <div class="layui-form-item">
+              <label class="layui-form-label">音乐播放量</label>
+              <div class="layui-input-block" prop="clicks">
+                <input
+                  v-model="ruleForm.clicks"
+                  type="text"
+                  name="clicks"
+                  placeholder="请输入音乐播放量"
+                  autocomplete="off"
+                  class="layui-input"
+                />
               </div>
             </div>
 
-            <button type="button" class="layui-btn mybtn-location" id="uploadPicture">
-              <i class="layui-icon">&#xe67c;</i>上传图片
-            </button>
+            <div class="layui-form-item">
+              <label class="layui-form-label">歌曲图片</label>
+              <div class="layui-input-block" prop="picture_url">
+                <input
+                  v-model="ruleForm.picture_url"
+                  type="text"
+                  name="picture_url"
+                  placeholder="请输入音乐图片地址"
+                  autocomplete="off"
+                  class="layui-input"
+                />
+              </div>
+            </div>
 
             <div class="layui-form-item">
               <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="formChange">立即修改</button>
+                <button class="layui-btn" lay-submit @click="changemusic('ruleForm')">立即修改</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
               </div>
             </div>
@@ -160,78 +168,73 @@
 </template>
 
 <script>
+import Bus from "../Bus/bus.js";
 export default {
+  data: function() {
+    return {
+      // ruleForm:{},
+      ruleForm: {
+        id: "",
+        name: "",
+        title: "",
+        time: "",
+        music_url: "",
+        clicks: "",
+        picture_url: ""
+      }
+    };
+  },
   created() {
-    this.changemusic();
+    let index = this.$route.query.id;
+    this.axios
+      .get("/getname", {
+        params: {
+          index: index
+        }
+      })
+      .then(result => {
+        // 将获取到的值渲染到ruleForm这个表单中。表单数据是对象，表格数据是数组
+        let arr = result.data;
+        this.ruleForm = arr[0];
+        console.log(this.ruleForm);
+      });
+    // Bus.$on("changemusic", (tableIDindex) => {
+    //   that.tableIDindex = tableIDindex;
+    //   console.log('this'+that.tableIDindex);
+
+    // });
   },
   methods: {
-    changemusic() {
-      var form = layui.form;
-
-      // 定义一个空对象，用于保存传递过来的参数信息
-      var paramsObj = {};
-
-      // 获得通过window.location.href 传递的参数信息
-      var params = location.search;
-      // 取出参数前面的?
-      params = params.substr(1);
-      // 通过&拆分参数， 得到的每一个元素都是键值对
-      paramsArray = params.split("&");
-      // 遍历数组，再通过=拆分键值对
-      for (var i = 0; i < paramsArray.length; i++) {
-        var item = paramsArray[i].split("="); //通过=拆分键值对
-        // item[0]  -->键名
-        // item[1]  -->值
-        // paramsObj['key'] = value;
-        // 将键与值添加到对象中   decodeURI 解码中文
-        paramsObj[`${item[0]}`] = decodeURI(item[1]);
-      }
-      console.log("obj---" + JSON.stringify(paramsObj));
-
-      // 0 -0 false "" [] {} undefined null --->false
-      if (paramsObj) {
-        // 将原数据显示在页面中
-        document.querySelector("input[name='name']").value = paramsObj.name;
-        document.querySelector("input[name='oldprice']").value =
-          paramsObj.oldprice;
-        document.querySelector("input[name='newprice']").value =
-          paramsObj.newprice;
-        document.querySelector("select[name='type']").value = paramsObj.type;
-        document.querySelector("input[name='stock']").value = paramsObj.stock;
-        document.querySelector("textarea[name='description']").value =
-          paramsObj.description;
-      }
-
-      var imgUrl = "";
-
-      var p = uploadFile();
-      p.then(data => {
-        imgUrl = data;
-      }).catch(data => {
-        console.log(data);
-      });
-
-      // 表单提交
-      document.querySelector(".layui-form") &&
-        form.on("submit(formChange)", function(data) {
-          var product = data.field;
-
-          product.file = imgUrl;
-          product["id"] = paramsObj.id;
-
-          console.log("product----" + JSON.stringify(product));
-
-          $.post("http://localhost:8888/music/change", product, function(data) {
-            if (data.code == 0) {
-              layer.msg("数据修改成功");
-            } else {
-              layer.msg("数据修改失败");
-            }
-            console.log(data);
-          });
-
+    changemusic(formName) {
+      let index = this.$route.query.id;
+      console.log(index);
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.axios
+            .post("/changemusic", {
+              index: index,
+              name: this.ruleForm.name,
+              title: this.ruleForm.title,
+              time: this.ruleForm.time,
+              music_url: this.ruleForm.music_url,
+              clicks: this.ruleForm.clicks,
+              picture_url: this.ruleForm.picture_url
+            })
+            .then(res => {
+              if (res.data.code == 0) {
+                this.$message({
+                  message: "修改商品成功",
+                  type: "success"
+                });
+              } else {
+                this.$message.error("该歌曲已存在");
+              }
+            });
+        } else {
+          console.log("error submit!!");
           return false;
-        });
+        }
+      });
     }
   }
 };
