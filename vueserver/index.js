@@ -151,14 +151,19 @@ app.get("/getHotmusic", function (req, res) {
 })
 
 //根据点击的音乐封面获取相应的歌曲信息
-app.get("/getSinglesongInfo",(req,res)=>{
-	let sql = "select * from allmusic";
-	mydb.query(sql, function (err, result) {
+app.post("/getSinglesongInfo",(req,res)=>{
+	console.log("songid:"+req.body.songid)
+	let sql = `select * from allmusic where id="${req.body.songid}"`;
+	console.log("sql:"+sql)
+	mydb.query(sql,(err, result)=> {
+		
 		if (err) {
 			console.log(err); return;
 		} else {
 			res.json(result)
 		}
+	
+		console.log("单曲信息"+result)
 	})
 })
 
