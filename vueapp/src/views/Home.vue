@@ -70,7 +70,7 @@
 
               <!-- 新碟上架列表 -->
               <div class="hot-song-cover">
-                <div class="single-song-cover" v-for="(item,index) in hotMusicCover" :key="index">
+                <div class="single-song-cover" v-for="(item,index) in newMusicCover" :key="index">
                   <i class="iconfont icon-bofang" @click="playMusic(index,$event)"></i>
                   <img :src="item.picture_url" @click="toSingleSong(index,$event)" alt />
                   <audio class="audio" :src="item.music_url"></audio>
@@ -99,7 +99,8 @@
               <!-- 入驻歌手 -->
               <div class="singerlist-title">
                 <div>入驻歌手</div>
-                <div @click="allSinger">查看全部>></div>
+                <!-- <div @click="allSinger">查看全部>></div> -->
+                <div>查看全部>></div>
               </div>
               <div class="singerlist" v-for="(item,index) in singerList" :key="index">
                 <div class="singer">
@@ -215,6 +216,7 @@ export default {
     return {
       activeIndex: "0",
       hotMusicCover: [],
+      newMusicCover: [],
       singerList: [],
       sing: {},
       isPlay: false,
@@ -238,9 +240,9 @@ export default {
   created() {
     console.log("---进入created---");
 
-    axios.get("/getHotmusic").then(res => {
-      this.hotMusicCover = res.data;
-      
+    axios.get("/getAllmusic").then(res => {
+      this.hotMusicCover = res.data.slice(0,8);
+      this.newMusicCover = res.data.slice(8,16);
     });
     axios.get("/getSingerList").then(res => {
       this.singerList = res.data;
@@ -314,9 +316,9 @@ export default {
           break;
       }
     },
-    allSinger() {
-      this.$router.push({ path: "/allsinger" });
-    },
+    // allSinger() {
+    //   this.$router.push({ path: "/allsinger" });
+    // },
     playMusic(index, event) {
       this.current = index;
       console.log("被点击的current:" + this.current);

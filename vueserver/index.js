@@ -35,28 +35,6 @@ app.get("/getData", function (req, res) {//4、开辟路由
 	})
 })
 
-app.get("/getEmployees", function (req, res) {
-	console.log("接收到前端发起的/getEmployees 请求");
-	console.log(req.query.employName);
-	var sql = "select * from employee where 1 ";
-
-	if (req.query.employName) {
-		sql += `and name like '%${req.query.employName}% '`
-	}
-
-	if (req.query.deptid) {
-		sql += `and deptid=${req.query.deptid}`
-	}
-
-	mydb.query(sql, function (err, result) {
-		if (err) {
-			console.log(err); return;
-		}
-		console.log(sql, result)
-		res.json(result)
-	})
-
-})
 // 用户登录操作post
 app.post("/userLogin", function (req, res) {
 	console.log(req)
@@ -191,20 +169,6 @@ app.post("/adminregister", (req, res) => {
 app.get("/getAllmusic", function (req, res) {
 
 	var sql = "select * from allmusic where 1 ";
-	mydb.query(sql, function (err, result) {
-		if (err) {
-			console.log(err); return;
-		} else {
-			res.json(result)
-		}
-	})
-})
-
-
-//获取热门推荐音乐列表（用的是所有音乐的前8条数据）
-app.get("/getHotmusic", function (req, res) {
-
-	let sql = "select * from allmusic limit 8";
 	mydb.query(sql, function (err, result) {
 		if (err) {
 			console.log(err); return;
