@@ -72,6 +72,7 @@ export default new Vuex.Store({
       return c
 
     },
+    // 获取数据
     comingcar(sate){
       
       return sate.car;
