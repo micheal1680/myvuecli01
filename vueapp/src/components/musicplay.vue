@@ -1,6 +1,6 @@
 <template>
   <div class="bottom-control">
-    <audio class="bottom-audio" src="../assets/music/01.mp3" :isPlay="false"></audio>
+    <audio class="bottom-audio" :src="singleSong" :son="isPlaying"></audio>
 
     <!-- 播放控制 -->
     <div class="control-icon">
@@ -33,6 +33,7 @@
 export default {
   data: function() {
     return {
+      son: "",
       theCover: "",
       musicTime: "",
       isPlay: false,
@@ -41,7 +42,13 @@ export default {
       playList: false
     };
   },
-  props: [],
+  props: ["singleSong","isPlaying"],
+  created(){   
+    console.log(this.son) 
+    if(this.son == true){      
+      play();
+    }
+  },
   methods: {
     play() {
       let audio = document.getElementsByClassName("bottom-audio")[0];
@@ -55,12 +62,12 @@ export default {
         pause.style.display = "block";
 
         let musicLength = audio.duration;
-        console.log("音乐长度" + musicLength);
+        // console.log("音乐长度" + musicLength);
         if (this.play) {
-          console.log("定时器外部" + this.audioWidth);
+          // console.log("定时器外部" + this.audioWidth);
           this.timer = setInterval(() => {
             this.audioWidth = (this.audioWidth / 50 + 1 / musicLength) * 50;
-            console.log("定时器内部" + this.audioWidth);
+            // console.log("定时器内部" + this.audioWidth);
             if (this.audioWidth >= 500) {
               clearInterval(this.timer);
               this.audioWidth = 0;

@@ -3,7 +3,7 @@
     这里是登录页面
     <el-form ref="ruleForm" :model="ruleForm" label-width="80px" style="width:450px">
       <el-form-item label="用户名">
-        <el-input v-model="ruleForm.username"></el-input>
+        <el-input v-model="ruleForm.adminname"></el-input>
       </el-form-item>
       <el-form-item label="密码">
         <el-input v-model="ruleForm.password" type="password"></el-input>
@@ -26,7 +26,7 @@ export default {
       isLogin: true,
       msg: "",
       ruleForm: {
-        username: "",
+        adminname: "",
         password: ""
       },
       rules: {
@@ -59,7 +59,7 @@ export default {
         if (valid) {
           this.axios
             .post("/userlogin", {
-              username: this.ruleForm.username,
+              adminname: this.ruleForm.adminname,
               password: this.ruleForm.password
             })
             .then(data => {
@@ -69,7 +69,7 @@ export default {
                 // 给“登录状态”设置本地缓存，即登录成功之后，不用再重新登录
                 localStorage.setItem("loginStatus",true);
                 this.$router.push({path:"/Backstage"});
-                localStorage.setItem("username",this.ruleForm.username)
+                localStorage.setItem("adminname",this.ruleForm.adminname)
                 this.isLogin = false; 
               } else if (data.data.status == 1) {
                 alert("用户密码输入错误!");

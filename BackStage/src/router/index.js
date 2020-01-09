@@ -8,6 +8,8 @@ import changeMusic from '../components/changeMusic.vue'
 import register from "../components/register.vue";
 import login from "../components/login.vue"
 
+
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -31,6 +33,11 @@ const routes = [
     component: changeMusic
   },
   {
+    path: '/mymain',
+    component: mymain
+  },
+  
+  {
     path: '/register',
     component: register
   },
@@ -48,16 +55,16 @@ const router = new VueRouter({
 })
 
 // 全局导航守卫
-// router.beforeEach(function (to, from, next) {
-//   console.log(to, from)
-//   if (to.path == "/musicPage") {
-//     if (localStorage.getItem("loginStatus")) {
-//       next()
-//     } else {
-//       next("/my");
-//     }
-//   } else {
-//     next()
-//   }
-// })
+router.beforeEach(function (to, from, next) {
+  console.log(to, from)
+  if (to.path == "/musicPage") {
+    if (localStorage.getItem("loginStatus")) {
+      next()
+    } else {
+      next("/my");
+    }
+  } else {
+    next()
+  }
+})
 export default router
