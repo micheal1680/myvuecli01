@@ -378,21 +378,28 @@ app.get("/getname", (req, res) => {
 			console.log(err);
 			return;
 		}
-		console.log(sql, result);
 		res.send(result)
 	})
 })
 // 后台修改商品功能
 app.post("/changemusic", (req, res) => {
-	console.log(req.body)
+	console.log(req.body.index)
+	console.log(req.body.name)
+	console.log(req.body.title)
+	console.log(req.body.time)
+	console.log(req.body.music_url)
+	console.log(req.body.clicks)
 	console.log('修改')
 	var sql = `select * from allmusic where id='${req.body.index}'`;
 	mydb.query(sql, (err, result) => {
 		console.log(result)
-		if (!result.length) {
-			var sql = `update allmusic set (name,title,time,music_url,clicks,picture_url) values ('${req.body.name}','${req.body.title}','${req.body.time}','${req.body.music_url}','${req.body.clicks}','${req.body.picture_url}') where id='${req.body.index}'`
+		if (result.length) {
+			// var sql = `update allmusic set (name,title,time,music_url,picture_url,clicks) values ('${req.body.name}','${req.body.title}','${req.body.time}','${req.body.music_url}','${req.body.picture_url}','${req.body.clicks}') where id='${req.body.index}'`
+			var sql = ` update allmusic set name='${req.body.name}',title='${req.body.title}',time='${req.body.time}',music_url='${req.body.music_url}',picture_url='${req.body.picture_url}',clicks='${req.body.clicks}' where id='${req.body.index}' `
+			console.log(sql)
 			mydb.query(sql, (err, result) => {
-				console.log(result);
+				console.log(result)
+				console.log(sql)
 				if (result.affectedRows) {
 					res.send({
 						code: 0,
@@ -403,7 +410,7 @@ app.post("/changemusic", (req, res) => {
 		} else {
 			res.send({
 				code: -1,
-				msg: "该歌曲已存在"
+				msg: "该歌曲不存在"
 			})
 		}
 

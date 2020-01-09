@@ -151,7 +151,7 @@
 
             <div class="layui-form-item">
               <div class="layui-input-block">
-                <button class="layui-btn" lay-submit @click="changemusic('ruleForm')">立即修改</button>
+                <button class="layui-btn" type="button" lay-submit @click="changemusic('ruleForm')">立即修改</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
               </div>
             </div>
@@ -168,7 +168,6 @@
 </template>
 
 <script>
-import Bus from "../Bus/bus.js";
 export default {
   data: function() {
     return {
@@ -208,9 +207,11 @@ export default {
     changemusic(formName) {
       let index = this.$route.query.id;
       console.log(index);
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.axios
+      console.log(this.ruleForm)
+      console.log(formName)
+      console.log(this.$refs[formName])
+      
+      this.axios
             .post("/changemusic", {
               index: index,
               name: this.ruleForm.name,
@@ -224,17 +225,16 @@ export default {
               if (res.data.code == 0) {
                 this.$message({
                   message: "修改商品成功",
-                  type: "success"
+                  type: "success"                  
                 });
+                console.log("修改商品："+res.data)
               } else {
                 this.$message.error("该歌曲已存在");
               }
             });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+
+
+
     }
   }
 };

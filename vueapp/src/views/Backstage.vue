@@ -110,7 +110,6 @@
 </template>
 
 <script>
-import Bus from "../Bus/bus.js"
 export default {
   data: function() {
     return {
@@ -121,7 +120,7 @@ export default {
   created() {
     this.axios.get("/bacstagelist").then(result => {
       this.tableData = result.data;
-      console.log(this.tableData);
+      console.log("商品管理"+this.tableData);
       console.log(this.tableData[0].title);
     });
   },

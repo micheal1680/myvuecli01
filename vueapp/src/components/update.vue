@@ -122,7 +122,9 @@ export default {
     // 获取本地缓存的登录用户名
     var username=localStorage.getItem("username")
     this.axios.get("/getnick",{
-      username:username
+      params: {
+        username:username
+      }
     }).then(result=>{
       // 将获取到的值渲染到ruleForm这个表单中。表单数据是对象，表格数据是数组
         this.ruleForm=result.data
