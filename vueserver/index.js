@@ -406,7 +406,7 @@ app.post("/changemusic", (req, res) => {
 })
 // 实现已保存的个人设置信息始终呈现在页面表单中，从其他页面进入这个页面，数据任然在
 app.get("getnick", (req, res) => {
-	var sql = `select * from setting where name='${req.body.username}'`
+	var sql = `select * from setting where name='${req.query.username}'`
 	mydb.query(sql, (err, result) => {
 		if (err) {
 			console.log(err);

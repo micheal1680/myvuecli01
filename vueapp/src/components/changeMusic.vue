@@ -168,7 +168,7 @@
 </template>
 
 <script>
-import Bus from "../Bus/bus.js";
+// import Bus from "../Bus/bus.js";
 export default {
   data: function() {
     return {
