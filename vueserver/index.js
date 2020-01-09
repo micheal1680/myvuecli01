@@ -254,13 +254,14 @@ app.get("/getproducts", function (req, res) {
 			}
 		})
 	}),
+	// 设置昵称
 	app.post("/myset", (req, res) => {
 		console.log(123)
 		var sql = `select * from setting where nickname='${req.body.nickname}'`;
 		mydb.query(sql, (err, result) => {
 			console.log(result);
 			if (!result.length) {
-				var sql = `insert into setting (nickname,description,sex,birth,location) values ('${req.body.nickname}','${req.body.description}','${req.body.sex}','${req.body.birth}','${req.body.location}')`;
+				var sql = `insert into setting (name,nickname,description,sex,birth,location) values ('${req.body.username}','${req.body.nickname}','${req.body.description}','${req.body.sex}','${req.body.birth}','${req.body.location}')`;
 				mydb.query(sql, (err, result) => {
 					console.log(result)
 					if (result.affectedRows) {
@@ -295,47 +296,138 @@ app.get("/getMusic", function (req, res) {
 	})
 })
 // 我喜欢的歌曲
-app.get("/favoritelist",(req,res)=>{
-	var sql=`select * from mylike`;
-	mydb.query(sql,function(err,result){
-        if(err){
-            console.log(err);
-            return;
-        }
-        console.log(sql,result);
-        res.json(result)
-    })
+app.get("/favoritelist", (req, res) => {
+	var sql = `select * from mylike`;
+	mydb.query(sql, function (err, result) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		console.log(sql, result);
+		res.json(result)
+	})
 })
 // 我的年度歌单
-app.get("/yearlist",(req,res)=>{
-	var sql=`select * from yearlist`;
-	mydb.query(sql,function(err,result){
-        if(err){
-            console.log(err);
-            return;
-        }
-        console.log(sql,result);
-        res.json(result)
-    })
+app.get("/yearlist", (req, res) => {
+	var sql = `select * from yearlist`;
+	mydb.query(sql, function (err, result) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		console.log(sql, result);
+		res.json(result)
+	})
 })
 // 后台音乐列表
-app.get("/bacstagelist",(req,res)=>{
-	var sql=`select * from bacstagelist`;
-	mydb.query(sql,function(err,result){
-        if(err){
-            console.log(err);
-            return;
-        }
-        console.log(sql,result);
-        res.json(result)
-    })
+app.get("/bacstagelist", (req, res) => {
+	var sql = `select * from allmusic`;
+	mydb.query(sql, function (err, result) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		console.log(sql, result);
+		res.json(result)
+	})
 })
+// 后台添加音乐功能
+app.post("/add", (req, res) => {
+	console.log(req.body)
+	var sql = `select * from allmusic where name='${req.body.name}'`;
+	mydb.query(sql, (err, result) => {
+		console.log(result)
+		if (!result.length) {
+			var sql = `insert into allmusic (name,title,time,music_url,clicks,picture_url) values ('${req.body.name}','${req.body.title}','${req.body.time}','${req.body.music_url}','${req.body.clicks}','${req.body.picture_url}')`
+			mydb.query(sql, (err, result) => {
+				console.log(result);
+				if (result.affectedRows) {
+					res.send({
+						code: 0,
+						msg: "添加商品成功"
+					})
+				}
+			})
+		} else {
+			res.send({
+				code: -1,
+				msg: "该歌曲已存在"
+			})
+		}
+
+	})
+})
+// 后台删除功能
+app.get("/delete", (req, res) => {
+	console.log(111)
+	var sql = `delete from allmusic where id='${req.query.index}'`;
+	mydb.query(sql, (err, result) => {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		res.json(result)
+	})
+})
+// 后台修改数据时直接展示原始数据
+app.get("/getname", (req, res) => {
+	var sql = `select * from allmusic where id='${req.query.index}'`
+	console.log("急急急")
+	mydb.query(sql, (err, result) => {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		console.log(sql, result);
+		res.send(result)
+	})
+})
+// 后台修改商品功能
+app.post("/changemusic", (req, res) => {
+	console.log(req.body)
+	console.log('修改')
+	var sql = `select * from allmusic where id='${req.body.index}'`;
+	mydb.query(sql, (err, result) => {
+		console.log(result)
+		if (!result.length) {
+			var sql = `update allmusic set (name,title,time,music_url,clicks,picture_url) values ('${req.body.name}','${req.body.title}','${req.body.time}','${req.body.music_url}','${req.body.clicks}','${req.body.picture_url}') where id='${req.body.index}'`
+			mydb.query(sql, (err, result) => {
+				console.log(result);
+				if (result.affectedRows) {
+					res.send({
+						code: 0,
+						msg: "修改商品成功"
+					})
+				}
+			})
+		} else {
+			res.send({
+				code: -1,
+				msg: "该歌曲已存在"
+			})
+		}
+
+	})
+})
+// 实现已保存的个人设置信息始终呈现在页面表单中，从其他页面进入这个页面，数据任然在
+app.get("getnick", (req, res) => {
+	var sql = `select * from setting where name='${req.body.username}'`
+	mydb.query(sql, (err, result) => {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		console.log(sql, result);
+		res.json(result)
+	})
+})
+// 修改昵称
 app.post("/updateset", (req, res) => {
 	var sql = `select * from setting where nickname='${req.body.nickname}'`;
 	mydb.query(sql, (err, result) => {
 		console.log(result);
-		if (!result.length) {gi
-			var sql = `update setting set nickname='${req.body.nickname}',description='${req.body.description}',sex='${req.body.sex}',birth='${req.body.birth}',location='${req.body.location}' where user_id=4`;
+		if (!result.length) {
+			var sql = `update setting set nickname='${req.body.nickname}',description='${req.body.description}',sex='${req.body.sex}',birth='${req.body.birth}',location='${req.body.location}' where name='${req.body.username}'`;
 			mydb.query(sql, (err, result) => {
 				console.log(result)
 				if (result.affectedRows) {
