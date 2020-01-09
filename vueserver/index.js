@@ -57,7 +57,7 @@ app.get("/getEmployees", function (req, res) {
 	})
 
 })
-// 登录操作post
+// 用户登录操作post
 app.post("/userLogin", function (req, res) {
 	console.log(req)
 	var sql = `select * from user where username='${req.body.username}'`;
@@ -85,7 +85,7 @@ app.post("/userLogin", function (req, res) {
 
 	})
 });
-// 注册
+// 用户注册
 app.post("/register", (req, res) => {
 	console.log(req.body)
 	var sql = `select * from  user where username='${req.body.username}'`;
@@ -122,6 +122,70 @@ app.post("/register", (req, res) => {
 
 })
 
+// 管理人员登录操作post
+app.post("/adminLogin", function (req, res) {
+	console.log(req)
+	var sql = `select * from admin where adminname='${req.body.adminname}'`;
+	mydb.query(sql, function (err, result) {
+		if (err) return;
+		console.log(result)
+		if (result.length == 0) {
+			res.json({
+				status: 2,
+				msg: "用户名输入错误"
+			})
+		} else {
+			if (result[0].adminname == req.body.adminname && result[0].password == req.body.password) {
+				res.json({
+					status: 0,
+					msg: "登陆成功"
+				})
+			} else {
+				res.json({
+					status: 1,
+					msg: "用户密码输入错误"
+				})
+			}
+		}
+
+	})
+});
+// 管理人员注册
+app.post("/adminregister", (req, res) => {
+	console.log(req.body.adminname)
+	var sql = `select * from  admin where adminname='${req.body.adminname}'`;
+	mydb.query(sql, (err, result) => {
+		console.log(result)
+		if (!result.length) {
+			if (req.body.checkPass == req.body.password) {
+				var sql = `insert  into admin (adminname,password) values ('${req.body.adminname}','${req.body.password}')`
+				mydb.query(sql, (err, data) => {
+					console.log(data);
+					if (data.affectedRows) {
+						res.send({
+							code: 0,
+							msg: "注册成功"
+						})
+					}
+				})
+			} else {
+				res.send({
+					code: -2,
+					msg: "输入密码与上次不一致"
+
+				})
+			}
+		} else {
+			res.send({
+				code: -1,
+				msg: "用户名已存在"
+			})
+		}
+
+	})
+
+
+})
 
 //获取所有音乐列表
 app.get("/getAllmusic", function (req, res) {
@@ -162,8 +226,6 @@ app.post("/getSinglesongInfo",(req,res)=>{
 		} else {
 			res.json(result)
 		}
-	
-		console.log("单曲信息"+result)
 	})
 })
 
@@ -383,13 +445,6 @@ app.get("/getname", (req, res) => {
 })
 // 后台修改商品功能
 app.post("/changemusic", (req, res) => {
-	console.log(req.body.index)
-	console.log(req.body.name)
-	console.log(req.body.title)
-	console.log(req.body.time)
-	console.log(req.body.music_url)
-	console.log(req.body.clicks)
-	console.log('修改')
 	var sql = `select * from allmusic where id='${req.body.index}'`;
 	mydb.query(sql, (err, result) => {
 		console.log(result)

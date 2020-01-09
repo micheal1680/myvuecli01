@@ -15,26 +15,6 @@
                 </dd>
               </dl>
             </li>
-
-            <li class="layui-nav-item">
-              <a href>云市场</a>
-            </li>
-            <li class="layui-nav-item">
-              <a href>发布商品</a>
-            </li>
-            <li class="layui-nav-item">
-              <a href="javascript:;">
-                <img src="http://t.cn/RCzsdCq" class="layui-nav-img" /> 贤心
-              </a>
-              <dl class="layui-nav-child">
-                <dd>
-                  <a href>基本资料</a>
-                </dd>
-                <dd>
-                  <a href>安全设置</a>
-                </dd>
-              </dl>
-            </li>
             <li class="layui-nav-item">
               <a href>退了</a>
             </li>
@@ -45,9 +25,9 @@
       <div class="layui-body">
         <!-- 内容主体区域 -->
         <div style="padding: 15px;">
-          <h2>添加商品</h2>
+          <h2>修改商品</h2>
           <hr />
-          <form class="layui-form" action>
+          <form class="layui-form" action ref="ruleForm" :model="ruleForm">
             <div class="layui-form-item">
               <label class="layui-form-label">
                 歌手
@@ -55,7 +35,7 @@
               </label>
               <div class="layui-input-block" prop="name">
                 <input
-                  v-model="name"
+                  v-model="ruleForm.name"
                   type="text"
                   name="name"
                   required
@@ -73,7 +53,7 @@
               </label>
               <div class="layui-input-block" prop="title">
                 <input
-                  v-model="title"
+                  v-model="ruleForm.title"
                   type="text"
                   name="title"
                   required
@@ -91,7 +71,7 @@
               </label>
               <div class="layui-input-block" prop="time">
                 <input
-                  v-model="time"
+                  v-model="ruleForm.time"
                   type="text"
                   name="time"
                   required
@@ -109,7 +89,7 @@
               </label>
               <div class="layui-input-block" prop="music_url">
                 <input
-                  v-model="music_url"
+                  v-model="ruleForm.music_url"
                   type="text"
                   name="music_url"
                   required
@@ -125,7 +105,7 @@
               <label class="layui-form-label">音乐播放量</label>
               <div class="layui-input-block" prop="clicks">
                 <input
-                  v-model="clicks"
+                  v-model="ruleForm.clicks"
                   type="text"
                   name="clicks"
                   placeholder="请输入音乐播放量"
@@ -134,12 +114,12 @@
                 />
               </div>
             </div>
-           
-           <div class="layui-form-item">
+
+            <div class="layui-form-item">
               <label class="layui-form-label">歌曲图片</label>
               <div class="layui-input-block" prop="picture_url">
                 <input
-                  v-model="picture_url"
+                  v-model="ruleForm.picture_url"
                   type="text"
                   name="picture_url"
                   placeholder="请输入音乐图片地址"
@@ -151,7 +131,12 @@
 
             <div class="layui-form-item">
               <div class="layui-input-block">
-                <button class="layui-btn" lay-submit type="button"  @click="addmusic">立即添加</button>
+                <button
+                  class="layui-btn"
+                  type="button"
+                  lay-submit
+                  @click="changemusic('ruleForm')"
+                >立即修改</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
               </div>
             </div>
@@ -171,33 +156,67 @@
 export default {
   data: function() {
     return {
-      name: "",
-      title: "",
-      time: "",
-      music_url: "",
-      clicks: "",
-      picture_url:""
+      // ruleForm:{},
+      ruleForm: {
+        id: "",
+        name: "",
+        title: "",
+        time: "",
+        music_url: "",
+        clicks: "",
+        picture_url: ""
+      }
     };
   },
-  methods: {
-    addmusic() {
-      this.axios.post("/add", {
-        name: this.name,
-        title: this.title,
-        time: this.time,
-        music_url: this.music_url,
-        clicks: this.clicks,
-        picture_url:this.picture_url
-      }).then(res=>{
-        if(res.data.code==0){
-          this.$message({
-            message:"添加商品成功",
-            type:'success'
-          })
-        }else{
-          this.$message.error("该歌曲已存在");
+  created() {
+    let index = this.$route.query.id;
+    this.axios
+      .get("/getname", {
+        params: {
+          index: index
         }
       })
+      .then(result => {
+        // 将获取到的值渲染到ruleForm这个表单中。表单数据是对象，表格数据是数组
+        let arr = result.data;
+        this.ruleForm = arr[0];
+        console.log(this.ruleForm);
+      });
+    // Bus.$on("changemusic", (tableIDindex) => {
+    //   that.tableIDindex = tableIDindex;
+    //   console.log('this'+that.tableIDindex);
+
+    // });
+  },
+  methods: {
+    changemusic(formName) {
+      let index = this.$route.query.id;
+      console.log(index);
+      console.log(this.ruleForm);
+      console.log(formName);
+      console.log(this.$refs[formName]);
+
+      this.axios
+        .post("/changemusic", {
+          index: index,
+          name: this.ruleForm.name,
+          title: this.ruleForm.title,
+          time: this.ruleForm.time,
+          music_url: this.ruleForm.music_url,
+          clicks: this.ruleForm.clicks,
+          picture_url: this.ruleForm.picture_url
+        })
+        .then(res => {
+          if (res.data.code == 0) {
+            this.$message({
+              message: "修改商品成功",
+              type: "success"
+            });
+            console.log("修改商品：" + res.data);
+          } else {
+            this.$message.error("该歌曲已存在");
+          }
+        });
     }
   }
 };
