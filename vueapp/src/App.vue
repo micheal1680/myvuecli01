@@ -163,10 +163,11 @@ export default {
     tuichu() {
       // 点击"退出"，清除本地缓存中的登录状态，即退出登录
       localStorage.clear("loginStatus");
-      //点击退出后，刷新发现页面登录框（没有效果）      
+      //点击退出后，刷新发现页面登录框（bus没有效果）      
       var localS = localStorage.getItem("loginStatus")
-      Bus.$emit("changeLoginStatus",false)
+      Bus.$emit("changeLoginStatus","false")
       console.log("点击退出")
+      // parent.location.reload(); 
     },
     
     loadAll() {

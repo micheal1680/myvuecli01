@@ -150,6 +150,18 @@ app.get("/getHotmusic", function (req, res) {
 	})
 })
 
+//根据点击的音乐封面获取相应的歌曲信息
+app.get("/getSinglesongInfo",(req,res)=>{
+	let sql = "select * from allmusic";
+	mydb.query(sql, function (err, result) {
+		if (err) {
+			console.log(err); return;
+		} else {
+			res.json(result)
+		}
+	})
+})
+
 //首页登录后展示用户信息，根据用户名获取头像
 app.post("/getUserPicture",function(req,res){
 	

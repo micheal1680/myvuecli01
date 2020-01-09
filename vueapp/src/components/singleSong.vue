@@ -1,17 +1,19 @@
 <template>
   <div class="song">
       {{this.$route.query.id}}
+
       <div class="song-left">
           <!-- 头像 -->
           <img src="" alt="">
       </div>
       <div class="song-right">
           <span>单曲</span>
-          <span>{{songName}}</span>
-          <p>歌手：{{singer}}</p>
+          <!-- <span>{{songInfo.title}}</span>
+          <p>歌手：{{songInfo.name}}</p> -->
           <p>所属专辑：{{songCD}}</p>
       </div>
       <div class="song-play">
+          <audio src=""></audio>
           <div>播放</div>
           <!-- 收藏，分享，评论，下载 -->
       </div>
@@ -24,18 +26,39 @@
 </template>
 
 <script>
-import musicPlay from "./musicPlay.vue"
+import musicPlay from "./musicPlay.vue";
+import axios from "axios";
+import Bus from "../bus/Bus.js";
 export default {
     data: function(){
         return {
-            songName: "默认",
-            singer: "默认",
             songCD: "默认",
-            lyric: "默认"
+            lyric: "默认",
+            songInfo: []
         }
     },
     components: {
         "musicPlay": musicPlay
+    },
+    created(){
+        console.log("---进入created---")
+        
+        // Bus.$on("singleSongInfo",(val)=>{
+        //     this.songInfo = val;
+        //     console.log("---created--songInfo---" + this.songInfo.name)
+        //     console.log("---created--songInfo---" + this.songInfo.title)
+            
+        // })
+        console.log(this.$route.query.id)
+        let songID = this.$route.query.id
+        axios.get("/getSinglesongInfo",{
+            params: {
+                songID: songID
+            }
+        }).then(res=>{
+            this.songInfo = res.data[songID]
+            console.log("---then---"+this.songInfo)
+        })
     }
 }
 </script>

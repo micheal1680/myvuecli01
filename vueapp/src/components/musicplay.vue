@@ -110,17 +110,21 @@ export default {
     color: #fff;
     font-size: 26px;
   }
-}
-.icon-bofang,
-.icon-zantingtingzhi {
-  position: absolute;
-  top: 7px;
-  left: 40px;
+  .icon-bofang,
+  .icon-zantingtingzhi {
+    position: absolute;
+    top: 7px;
+    left: 40px;
+  }
+  .icon-zantingtingzhi {
+    display: none;
+  }
+  .icon-xiayishou {
+    margin-bottom: 6px;
+    margin-left: 35px;
+  }
 }
 
-.icon-zantingtingzhi {
-  display: none;
-}
 .progress-bar {
   margin: 0 20px;
 }
@@ -140,11 +144,6 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-}
-
-.icon-xiayishou {
-  margin-bottom: 6px;
-  margin-left: 35px;
 }
 
 .bottom-playlist-icon {
