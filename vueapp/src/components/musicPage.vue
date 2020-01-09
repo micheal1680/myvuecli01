@@ -43,6 +43,11 @@
 
 <script>
 export default {
+  data: function(){
+    return {
+      activeIndex: ""
+    }
+  },
   methods: {
     handleSelect(key, keyPath) {
       switch (key) {

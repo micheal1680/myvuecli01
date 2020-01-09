@@ -154,7 +154,7 @@ export default {
         }
       })
       .then(result => {
-        // console.log(result.data)
+        // console.log(4444)
         // console.log("_________")
         // console.log(result)
         this.prodet = result.data.data;

@@ -16,11 +16,12 @@ mydb.connect();//7、发起数据库连接
 
 var app = express();//2、创建
 //9、处理跨域
-app.use(function (req, res, next) {
-	res.setHeader("Access-Control-Allow-Origin", "*");
-	res.setHeader("Access-Control-Allow-Headers", "content-type");
+app.use(function(req,res,next){
+	res.setHeader("Access-Control-Allow-Origin","*");
+	res.setHeader("Access-Control-Allow-Headers","content-type");
 	next();
 })
+
 app.use(bodyPaser.json());//处理前端传递数据为json 格式
 app.use(bodyPaser.urlencoded({
 	extended: true	//让后端识别urlencoded ，gzip 文件格式
@@ -149,8 +150,29 @@ app.get("/getHotmusic", function (req, res) {
 	})
 })
 
+//首页登录后展示用户信息，根据用户名获取头像
+app.post("/getUserPicture",function(req,res){
+	
+	let sql = "select * from user where 1 "
+	if(req.body.username){
+		sql += `and username = '${req.body.username}'`		
+	}
+	console.log(sql)
+	
+	mydb.query(sql,function(err,result){
+		if(err){
+			console.log(err)
+			return;
+		} else {
+			res.json(result)
+			console.log(result)
+			console.log(req.body.username)
+		}
+	})
+})
 
-app.get("/getSingerList", function (req, res) {
+//首页获取歌手列表
+app.get("/getSingerList",function(req,res){
 	let sql = "select * from singer limit 10";
 	mydb.query(sql, function (err, result) {
 		if (err) {
@@ -162,8 +184,6 @@ app.get("/getSingerList", function (req, res) {
 	})
 
 })
-
-
 
 // 商品展示
 app.get("/getproducts", function (req, res) {
@@ -281,11 +301,23 @@ app.get("/yearlist",(req,res)=>{
         res.json(result)
     })
 })
+// 后台音乐列表
+app.get("/bacstagelist",(req,res)=>{
+	var sql=`select * from bacstagelist`;
+	mydb.query(sql,function(err,result){
+        if(err){
+            console.log(err);
+            return;
+        }
+        console.log(sql,result);
+        res.json(result)
+    })
+})
 app.post("/updateset", (req, res) => {
 	var sql = `select * from setting where nickname='${req.body.nickname}'`;
 	mydb.query(sql, (err, result) => {
 		console.log(result);
-		if (!result.length) {
+		if (!result.length) {gi
 			var sql = `update setting set nickname='${req.body.nickname}',description='${req.body.description}',sex='${req.body.sex}',birth='${req.body.birth}',location='${req.body.location}' where user_id=4`;
 			mydb.query(sql, (err, result) => {
 				console.log(result)

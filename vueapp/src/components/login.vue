@@ -68,7 +68,7 @@ export default {
                 // 给“登录状态”设置本地缓存，即登录成功之后，不用再重新登录
                 localStorage.setItem("loginStatus",true);
                 this.$router.push({path:"/musicPage"});
-                localStorage.setItem("username",this.ruleForm.username)
+                localStorage.setItem("username",this.ruleForm.username) 
               } else if (data.data.status == 1) {
                 alert("用户密码输入错误!");
                 this.msg = data.data.msg;
