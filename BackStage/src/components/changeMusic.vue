@@ -15,26 +15,6 @@
                 </dd>
               </dl>
             </li>
-
-            <li class="layui-nav-item">
-              <a href>云市场</a>
-            </li>
-            <li class="layui-nav-item">
-              <a href>发布商品</a>
-            </li>
-            <li class="layui-nav-item">
-              <a href="javascript:;">
-                <img src="http://t.cn/RCzsdCq" class="layui-nav-img" /> 贤心
-              </a>
-              <dl class="layui-nav-child">
-                <dd>
-                  <a href>基本资料</a>
-                </dd>
-                <dd>
-                  <a href>安全设置</a>
-                </dd>
-              </dl>
-            </li>
             <li class="layui-nav-item">
               <a href>退了</a>
             </li>
@@ -151,7 +131,12 @@
 
             <div class="layui-form-item">
               <div class="layui-input-block">
-                <button class="layui-btn" lay-submit @click="changemusic('ruleForm')">立即修改</button>
+                <button
+                  class="layui-btn"
+                  type="button"
+                  lay-submit
+                  @click="changemusic('ruleForm')"
+                >立即修改</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
               </div>
             </div>
@@ -208,33 +193,31 @@ export default {
     changemusic(formName) {
       let index = this.$route.query.id;
       console.log(index);
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.axios
-            .post("/changemusic", {
-              index: index,
-              name: this.ruleForm.name,
-              title: this.ruleForm.title,
-              time: this.ruleForm.time,
-              music_url: this.ruleForm.music_url,
-              clicks: this.ruleForm.clicks,
-              picture_url: this.ruleForm.picture_url
-            })
-            .then(res => {
-              if (res.data.code == 0) {
-                this.$message({
-                  message: "修改商品成功",
-                  type: "success"
-                });
-              } else {
-                this.$message.error("该歌曲已存在");
-              }
+      console.log(this.ruleForm);
+      console.log(formName);
+      console.log(this.$refs[formName]);
+
+      this.axios
+        .post("/changemusic", {
+          index: index,
+          name: this.ruleForm.name,
+          title: this.ruleForm.title,
+          time: this.ruleForm.time,
+          music_url: this.ruleForm.music_url,
+          clicks: this.ruleForm.clicks,
+          picture_url: this.ruleForm.picture_url
+        })
+        .then(res => {
+          if (res.data.code == 0) {
+            this.$message({
+              message: "修改商品成功",
+              type: "success"
             });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+            console.log("修改商品：" + res.data);
+          } else {
+            this.$message.error("该歌曲已存在");
+          }
+        });
     }
   }
 };

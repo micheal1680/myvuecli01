@@ -8,8 +8,8 @@
       </div>
       <div class="song-right">
           <span>单曲</span>
-          <!-- <span>{{songInfo.title}}</span>
-          <p>歌手：{{songInfo.name}}</p> -->
+          <span>{{songInfo.title}}</span>
+          <p>歌手：{{songInfo.name}}</p>
           <p>所属专辑：{{songCD}}</p>
       </div>
       <div class="song-play">
@@ -34,7 +34,7 @@ export default {
         return {
             songCD: "默认",
             lyric: "默认",
-            songInfo: []
+            songInfo: {}
         }
     },
     components: {
@@ -51,13 +51,14 @@ export default {
         // })
         console.log(this.$route.query.id)
         let songID = this.$route.query.id
-        axios.get("/getSinglesongInfo",{
-            params: {
-                songID: songID
-            }
+        axios.post("/getSinglesongInfo",{
+            songid: songID
         }).then(res=>{
-            this.songInfo = res.data[songID]
-            console.log("---then---"+this.songInfo)
+            let songInfoArr = res.data;
+            this.songInfo = songInfoArr[0]
+            console.log(songInfoArr)
+            console.log(songInfoArr[0])
+            console.log(this.songInfo)
         })
     }
 }

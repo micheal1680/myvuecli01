@@ -1,7 +1,6 @@
-import Vue from 'vue'
+import Vue from "vue";
 
-const Bus = new Vue();
+// 获取一个vue对象Bus，因为vue自带$emit和$on方法
+const Bus = new Vue()
 
 export default Bus;
-
-

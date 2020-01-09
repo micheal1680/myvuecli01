@@ -15,28 +15,8 @@
                 </dd>
               </dl>
             </li>
-
             <li class="layui-nav-item">
-              <a href>云市场</a>
-            </li>
-            <li class="layui-nav-item">
-              <a href>发布商品</a>
-            </li>
-            <li class="layui-nav-item">
-              <a href="javascript:;">
-                <img src="http://t.cn/RCzsdCq" class="layui-nav-img" /> 贤心
-              </a>
-              <dl class="layui-nav-child">
-                <dd>
-                  <a href>基本资料</a>
-                </dd>
-                <dd>
-                  <a href>安全设置</a>
-                </dd>
-              </dl>
-            </li>
-            <li class="layui-nav-item">
-              <a href>退了</a>
+              <a href>退出</a>
             </li>
           </ul>
         </div>
@@ -121,7 +101,7 @@ export default {
   created() {
     this.axios.get("/bacstagelist").then(result => {
       this.tableData = result.data;
-      console.log(this.tableData);
+      console.log("商品管理"+this.tableData);
       console.log(this.tableData[0].title);
     });
   },

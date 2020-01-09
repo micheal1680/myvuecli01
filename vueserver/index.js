@@ -57,7 +57,7 @@ app.get("/getEmployees", function (req, res) {
 	})
 
 })
-// 登录操作post
+// 用户登录操作post
 app.post("/userLogin", function (req, res) {
 	console.log(req)
 	var sql = `select * from user where username='${req.body.username}'`;
@@ -85,7 +85,7 @@ app.post("/userLogin", function (req, res) {
 
 	})
 });
-// 注册
+// 用户注册
 app.post("/register", (req, res) => {
 	console.log(req.body)
 	var sql = `select * from  user where username='${req.body.username}'`;
@@ -122,6 +122,70 @@ app.post("/register", (req, res) => {
 
 })
 
+// 管理人员登录操作post
+app.post("/adminLogin", function (req, res) {
+	console.log(req)
+	var sql = `select * from admin where adminname='${req.body.adminname}'`;
+	mydb.query(sql, function (err, result) {
+		if (err) return;
+		console.log(result)
+		if (result.length == 0) {
+			res.json({
+				status: 2,
+				msg: "用户名输入错误"
+			})
+		} else {
+			if (result[0].adminname == req.body.adminname && result[0].password == req.body.password) {
+				res.json({
+					status: 0,
+					msg: "登陆成功"
+				})
+			} else {
+				res.json({
+					status: 1,
+					msg: "用户密码输入错误"
+				})
+			}
+		}
+
+	})
+});
+// 管理人员注册
+app.post("/adminregister", (req, res) => {
+	console.log(req.body.adminname)
+	var sql = `select * from  admin where adminname='${req.body.adminname}'`;
+	mydb.query(sql, (err, result) => {
+		console.log(result)
+		if (!result.length) {
+			if (req.body.checkPass == req.body.password) {
+				var sql = `insert  into admin (adminname,password) values ('${req.body.adminname}','${req.body.password}')`
+				mydb.query(sql, (err, data) => {
+					console.log(data);
+					if (data.affectedRows) {
+						res.send({
+							code: 0,
+							msg: "注册成功"
+						})
+					}
+				})
+			} else {
+				res.send({
+					code: -2,
+					msg: "输入密码与上次不一致"
+
+				})
+			}
+		} else {
+			res.send({
+				code: -1,
+				msg: "用户名已存在"
+			})
+		}
+
+	})
+
+
+})
 
 //获取所有音乐列表
 app.get("/getAllmusic", function (req, res) {
@@ -151,9 +215,12 @@ app.get("/getHotmusic", function (req, res) {
 })
 
 //根据点击的音乐封面获取相应的歌曲信息
-app.get("/getSinglesongInfo",(req,res)=>{
-	let sql = "select * from allmusic";
-	mydb.query(sql, function (err, result) {
+app.post("/getSinglesongInfo",(req,res)=>{
+	console.log("songid:"+req.body.songid)
+	let sql = `select * from allmusic where id="${req.body.songid}"`;
+	console.log("sql:"+sql)
+	mydb.query(sql,(err, result)=> {
+		
 		if (err) {
 			console.log(err); return;
 		} else {
@@ -373,21 +440,21 @@ app.get("/getname", (req, res) => {
 			console.log(err);
 			return;
 		}
-		console.log(sql, result);
 		res.send(result)
 	})
 })
 // 后台修改商品功能
 app.post("/changemusic", (req, res) => {
-	console.log(req.body)
-	console.log('修改')
 	var sql = `select * from allmusic where id='${req.body.index}'`;
 	mydb.query(sql, (err, result) => {
 		console.log(result)
-		if (!result.length) {
-			var sql = `update allmusic set (name,title,time,music_url,clicks,picture_url) values ('${req.body.name}','${req.body.title}','${req.body.time}','${req.body.music_url}','${req.body.clicks}','${req.body.picture_url}') where id='${req.body.index}'`
+		if (result.length) {
+			// var sql = `update allmusic set (name,title,time,music_url,picture_url,clicks) values ('${req.body.name}','${req.body.title}','${req.body.time}','${req.body.music_url}','${req.body.picture_url}','${req.body.clicks}') where id='${req.body.index}'`
+			var sql = ` update allmusic set name='${req.body.name}',title='${req.body.title}',time='${req.body.time}',music_url='${req.body.music_url}',picture_url='${req.body.picture_url}',clicks='${req.body.clicks}' where id='${req.body.index}' `
+			console.log(sql)
 			mydb.query(sql, (err, result) => {
-				console.log(result);
+				console.log(result)
+				console.log(sql)
 				if (result.affectedRows) {
 					res.send({
 						code: 0,
@@ -398,7 +465,7 @@ app.post("/changemusic", (req, res) => {
 		} else {
 			res.send({
 				code: -1,
-				msg: "该歌曲已存在"
+				msg: "该歌曲不存在"
 			})
 		}
 

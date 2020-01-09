@@ -34,10 +34,7 @@
         <el-menu-item index="3-2">个人设置</el-menu-item>
         <el-menu-item index="3-3" @click="tuichu">退出</el-menu-item>
       </el-submenu>
-      <el-menu-item index="6">后台管理</el-menu-item>
     </el-menu>
-    <!-- <test-footer></test-footer> -->
-    <!-- <router-view></router-view> -->
 
     <keep-alive>
       <router-view v-if="$route.meta.keepAlive"></router-view>
@@ -58,28 +55,7 @@ export default {
       value: "",
       state: "",
       timeout: null,
-      options: [
-        // {
-        //   value: "选项1",
-        //   label: "阿黛尔"
-        // },
-        // {
-        //   value: "选项2",
-        //   label: "碧昂丝"
-        // },
-        // {
-        //   value: "选项3",
-        //   label: "亚瑟小子"
-        // },
-        // {
-        //   value: "选项4",
-        //   label: "周杰伦"
-        // },
-        // {
-        //   value: "选项5",
-        //   label: "邓紫棋"
-        // }
-      ]
+      options: []
     };
   },
   // components:{
@@ -111,9 +87,6 @@ export default {
           break;
         case "5":
           this.$route.path == "/product" ? "" : this.$router.push("/product");
-          break;
-        case "6":
-          this.$route.path == "/Backstage" ? "" : this.$router.push("/Backstage");
           break;
       }
     },
@@ -149,14 +122,8 @@ export default {
         case "/setting":
           this.activeIndex = "3-2";
           break;
-        // case "/":
-        //   this.activeIndex = "3-3";
-        //   break;
         case "/product":
           this.activeIndex = "5";
-          break;
-        case "/Backstage":
-          this.activeIndex = "6";
           break;
       }
     },
